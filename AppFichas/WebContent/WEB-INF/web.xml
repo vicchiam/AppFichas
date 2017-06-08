@@ -9,4 +9,26 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>MainServlet</display-name>
+    <servlet-name>MainServlet</servlet-name>
+    <servlet-class>pcs.main.MainServlet</servlet-class>
+    <init-param>
+    	<param-name>pathJSP</param-name>
+    	<param-value>/jsp/</param-value>    	
+    </init-param>
+    <init-param>
+    	<param-name>pathCSS</param-name>
+    	<param-value>/css/</param-value>    	
+    </init-param>
+    <init-param>
+    	<param-name>pathJS</param-name>
+    	<param-value>/js/</param-value>    	
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MainServlet</servlet-name>
+    <url-pattern>//*</url-pattern>
+  </servlet-mapping>
 </web-app>
