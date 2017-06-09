@@ -1,0 +1,31 @@
+@CHARSET "ISO-8859-1";
+
+*{
+	padding:0px;
+	margin:0px;
+}
+
+html {
+	width:100vm;
+  	height:100vh;
+}
+
+body {
+	width:100vm;
+  	height:100vh;
+    background-color: #e7e7e7;
+    font-family: Helvetica;
+    font-size: 14px;
+    color: #666;
+    margin: 0px;
+    padding: 0px;
+}
+
+#content{
+	display:block;
+	position:relative;
+	width:80%;
+	height:100%;
+	margin-left:10%;
+	min-width:800px;	
+}

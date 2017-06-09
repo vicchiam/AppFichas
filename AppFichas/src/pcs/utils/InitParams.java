@@ -11,9 +11,9 @@ public class InitParams {
 	private InitParams(){}
 	
 	private InitParams(String pathJSP, String pathCSS, String pathJS){
-		this.pathJSP=pathJSP;
-		this.pathCSS=pathCSS;
-		this.pathJS=pathJS;
+		InitParams.pathJSP=pathJSP;
+		InitParams.pathCSS=pathCSS;
+		InitParams.pathJS=pathJS;
 	}
 	
 	public static InitParams getInstance(String pathJSP, String pathCSS, String pathJS){
