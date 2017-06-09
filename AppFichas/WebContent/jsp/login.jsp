@@ -5,35 +5,29 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Inicio de Sessión</title>
-	<link href="<c:url value="/css/main.css" />" rel="stylesheet">
-	<link href="<c:url value="/css/login.css" />" rel="stylesheet">
-	<link href="<c:url value="/css/classes.css" />" rel="stylesheet">
-	<link href="<c:url value="/css/jquery-ui.css" />" rel="stylesheet">
-    <script src="<c:url value="/js/jquery-3.2.1.js" />"></script>
-    <script src="<c:url value="/js/jquery-ui.js" />"></script>    
+	<c:import url="/jsp/header.jsp"></c:import>    
 </head>
 <body>
-	<div id="content">
-		<div id="login">
+	<section id="container">
+		<section id="login">
 			
-			<form method="post" action="User" >
+			<form method="post" action="?action=startSession" >
 				<h2>Introduzca sus datos de usuario</h2>
-				<input type="hidden" name="action" id="action" value="startSession" />
-				<% if(request.getAttribute("error")!=null){ %>
+				<c:if test = "${requestScope.error!=null}">				
 					<span class="error">Usuario o password incorrecto</span>
-				<% } %>						
+				</c:if>				
 				<table>
 					<tr>
 						<td><label for="user">Usuario:</label></td>
 					</tr>
 					<tr>
-						<td><input type="text" name="user" id="user" value="" /></td>					
+						<td><input type="text" name="user" id="user" value="" required/></td>					
 					</tr>
 					<tr>
 						<td><label for="password">Contraseña:</label></td>					
 					</tr>
 					<tr>
-						<td><input type="password" name="password" id="password" value="" /></td>					
+						<td><input type="password" name="password" id="password" value="" required /></td>					
 					</tr>			
 					<tr>
 						<td>
@@ -43,7 +37,7 @@
 				</table>				
 			</form>
 			
-		</div>		
-	</div>	
+		</section>		
+	</section>	
 </body>
 </html>

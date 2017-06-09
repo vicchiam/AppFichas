@@ -21,11 +21,16 @@ body {
     padding: 0px;
 }
 
-#content{
+#container{
 	display:block;
 	position:relative;
-	width:80%;
+	width:100%;
 	height:100%;
-	margin-left:10%;
 	min-width:800px;	
+}
+
+/*****GENERAL CLASES*************************/
+
+.error{
+	color:red;
 }

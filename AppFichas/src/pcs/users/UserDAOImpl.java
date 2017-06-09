@@ -3,6 +3,7 @@ package pcs.users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import pcs.utils.JDBCUtil;
 
@@ -30,6 +31,10 @@ public class UserDAOImpl implements UserDAO{
 				user.setMail(rs.getString("mail"));
 				user.setType(rs.getInt("type"));
 			}			
+			rs.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
 		}
 		catch(Exception e){
 			e.printStackTrace();

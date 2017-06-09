@@ -7,7 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import pcs.users.User;
+import pcs.users.UserDAO;
+import pcs.users.UserDAOImpl;
 import pcs.utils.InitParams;
 import pcs.utils.ServletUtils;
 
@@ -46,15 +50,39 @@ public class MainServlet extends HttpServlet {
 		if(action==null){
 			ServletUtils.setResponseController(this, "login").forward(request, response);
 		}
-		
+		else if(action.equals("logout")){
+			HttpSession session=request.getSession();
+			session.invalidate();
+			ServletUtils.setResponseController(this, "login").forward(request, response);
+		}		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		String action=request.getParameter("action");
+		
+		if(action.equals("startSession")){			
+			
+			String userName=request.getParameter("user");
+			String password=request.getParameter("password");
+			
+			UserDAO userDAO = new UserDAOImpl();
+			User user=userDAO.loginUser(userName, password);
+			
+			if(user.getId()!=0){
+				HttpSession session=request.getSession();
+				session.setAttribute("user", user);
+				ServletUtils.setResponseController(this, "index").forward(request, response);
+			}
+			else{
+				request.setAttribute("error", "user/pass incorrect");
+				ServletUtils.setResponseController(this, "login").forward(request, response);
+			}
+		}
+		
 	}
 
 }

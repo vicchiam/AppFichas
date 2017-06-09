@@ -56,6 +56,7 @@ public class UserController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		/*
 		String action=request.getParameter("action");
 		
 		if(action.equals("startSession")){			
@@ -71,9 +72,10 @@ public class UserController extends HttpServlet {
 			}
 			else{
 				request.setAttribute("error", "user/pass incorrect");
-				ServletUtils.setResponseController(this, "login").forward(request, response);
+				ServletUtils.setResponseController(this, "user/login").forward(request, response);
 			}
 		}
+		*/
 		
 	}
 
