@@ -18,5 +18,6 @@
 			
 		</section>
 	</section>
+	<c:import url="/jsp/windows.jsp"></c:import>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package pcs.users;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.ServletConfig;
@@ -14,6 +15,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import pcs.main.Window;
 import pcs.test.Test;
 import pcs.utils.ServletUtils;
 
@@ -70,12 +72,17 @@ public class UserController extends HttpServlet {
 			request.setAttribute("typeNames", User.typeNames);
 			request.setAttribute("stateNames", User.stateNames);
 			
+			Collection<Window> windows=new ArrayList<Window>();
+			//windows.add(new Window("USR",400,350,"Usuario"));
+			//windows.add(new Window("MARK",400,350,"Marca"));
+			request.setAttribute("windows", windows);
+			
 			String userName=request.getParameter("f_user");
 			String email=request.getParameter("f_mail");
 			String type=request.getParameter("f_type");
 			String state=request.getParameter("f_state");
 			
-			log.info("User:"+userName+" Mail:"+email+" Type:"+type+" State:"+state);
+			//log.info("User:"+userName+" Mail:"+email+" Type:"+type+" State:"+state);
 			
 			UserDAO userDAO=new UserDAOImpl();
 			Collection<User> listUsers=userDAO.listUsers(userName, email, type, state);

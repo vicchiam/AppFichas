@@ -109,8 +109,6 @@ public class UserDAOImpl implements UserDAO{
 			sql+=" WHERE "+String.join(" AND ", where);
 		}
 		
-		System.out.println(sql);
-		
 		return JDBCUtil.getPreparedStatement(conn, sql , params);			
 	}
 	
