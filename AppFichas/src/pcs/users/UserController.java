@@ -1,18 +1,20 @@
 package pcs.users;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import pcs.utils.InitParams;
+import pcs.test.Test;
 import pcs.utils.ServletUtils;
 
 /**
@@ -22,6 +24,8 @@ public class UserController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LogManager.getLogger("UserController: ");
+	
+	private String pathJSP;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -35,10 +39,7 @@ public class UserController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
-		String pathJSP=config.getInitParameter("pathJSP");
-		String pathCSS=config.getInitParameter("pathCSS");
-		String pathJS=config.getInitParameter("pathJS");		
-		InitParams.getInstance(pathJSP,pathCSS,pathJS);
+		//pathJSP=config.getInitParameter("pathJSP");	
 		
 		BasicConfigurator.configure();
 				
@@ -49,6 +50,8 @@ public class UserController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		doPost(request,response);
+		
 	}
 
 	/**
@@ -56,26 +59,44 @@ public class UserController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		/*
-		String action=request.getParameter("action");
+		HttpSession session=request.getSession();
+		if(!ServletUtils.authorized(session)){
+			ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
+		}
 		
-		if(action.equals("startSession")){			
+		String action=request.getParameter("action");		
+		
+		if(action.equals("list")){
+			request.setAttribute("typeNames", User.typeNames);
+			request.setAttribute("stateNames", User.stateNames);
 			
-			String userName=request.getParameter("user");
-			String password=request.getParameter("password");
+			String userName=request.getParameter("f_user");
+			String email=request.getParameter("f_mail");
+			String type=request.getParameter("f_type");
+			String state=request.getParameter("f_state");
 			
-			UserDAO userDAO = new UserDAOImpl();
-			User user=userDAO.loginUser(userName, password);
+			log.info("User:"+userName+" Mail:"+email+" Type:"+type+" State:"+state);
 			
-			if(user.getId()!=0){
-				ServletUtils.setResponseController(this, "index").forward(request, response);
+			UserDAO userDAO=new UserDAOImpl();
+			Collection<User> listUsers=userDAO.listUsers(userName, email, type, state);
+			
+			//Collection<User> listUsers=Test.getUsers();
+			request.setAttribute("listUsers", listUsers);
+			if(request.getParameter("ajax")==null){
+				ServletUtils.setResponseController(this, "/jsp/users/user").forward(request, response);
 			}
 			else{
-				request.setAttribute("error", "user/pass incorrect");
-				ServletUtils.setResponseController(this, "user/login").forward(request, response);
-			}
+				ServletUtils.setResponseController(this, "/jsp/users/listUsers").forward(request, response);
+			}			
+		}		
+		else if(action.equals("startSession")){			
+			
+			
 		}
-		*/
+		else{
+			//ServletUtils.setResponseController(this, "index").forward(request, response);
+		}
+		
 		
 	}
 

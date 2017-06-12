@@ -3,10 +3,11 @@
 <header>
 	<nav id="menu">
 		<ul>
+			<c:if test ="${sessionScope.user.type==1}">				
 			<li class="level1">
 				<a class="level1" href="#">Gestión</a>
 				<ul class="level2">
-					<li><a class="level2" href="#">Usuarios</a></li>
+					<li><a class="level2" href="/AppFichas/Users?action=list">Usuarios</a></li>
 					<li><a class="level2" href="#">Marcas</a></li>
 					<li><a class="level2" href="#">Centros</a></li>
 					<li><a class="level2" href="#">Envase</a></li>
@@ -14,15 +15,17 @@
 					<li><a class="level2" href="#">Químicos</a></li>
 				</ul>
 			</li>
+			</c:if>
 			<li class="level1">
 				<a class="level1" href="#">Fichas</a>
 			</li>
 			<li class="level1">
-				<a class="level1" href="?action=logout">Salir</a>
+				<a class="level1" href="/AppFichas/?action=logout">Salir</a>
 			</li>
 		</ul>
 		<div id="user_nav">
 			<c:out value= "${sessionScope.user.user}" />
+			<c:out value= "${sessionScope.user.type}" />
 		</div>
 	</nav>
 </header>

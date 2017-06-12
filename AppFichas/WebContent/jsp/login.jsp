@@ -5,13 +5,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Inicio de Sessión</title>
+	<link href="<c:url value="/resources/css/login.css" />" rel="stylesheet" />
 	<c:import url="/jsp/header.jsp"></c:import>    
 </head>
 <body>
 	<section id="container">
 		<section id="login">
 			
-			<form method="post" action="?action=startSession" >
+			<form method="post" action="/AppFichas/?action=startSession" >
 				<h2>Introduzca sus datos de usuario</h2>
 				<c:if test = "${requestScope.error!=null}">				
 					<span class="error">Usuario o password incorrecto</span>

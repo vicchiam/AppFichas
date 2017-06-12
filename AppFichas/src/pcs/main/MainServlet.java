@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import pcs.users.User;
 import pcs.users.UserDAO;
 import pcs.users.UserDAOImpl;
-import pcs.utils.InitParams;
 import pcs.utils.ServletUtils;
 
 /**
@@ -20,6 +19,8 @@ import pcs.utils.ServletUtils;
  */
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private String pathJSP;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -33,11 +34,7 @@ public class MainServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
-		String pathJSP=config.getInitParameter("pathJSP");
-		String pathCSS=config.getInitParameter("pathCSS");
-		String pathJS=config.getInitParameter("pathJS");		
-		InitParams.getInstance(pathJSP,pathCSS,pathJS);
-				
+		pathJSP=config.getInitParameter("pathJSP");				
 	}
 
 	/**
@@ -48,12 +45,12 @@ public class MainServlet extends HttpServlet {
 		String action=request.getParameter("action");
 		
 		if(action==null){
-			ServletUtils.setResponseController(this, "login").forward(request, response);
+			ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
 		}
 		else if(action.equals("logout")){
 			HttpSession session=request.getSession();
 			session.invalidate();
-			ServletUtils.setResponseController(this, "login").forward(request, response);
+			ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
 		}		
 	}
 
@@ -75,11 +72,11 @@ public class MainServlet extends HttpServlet {
 			if(user.getId()!=0){
 				HttpSession session=request.getSession();
 				session.setAttribute("user", user);
-				ServletUtils.setResponseController(this, "index").forward(request, response);
+				ServletUtils.setResponseController(this, "/jsp/index").forward(request, response);
 			}
 			else{
 				request.setAttribute("error", "user/pass incorrect");
-				ServletUtils.setResponseController(this, "login").forward(request, response);
+				ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
 			}
 		}
 		

@@ -10,6 +10,7 @@
 <body>
 	<section id="container">
 		<c:import url="/jsp/menu.jsp"></c:import>
+		<section id="content"></section>
 	</section>
 </body>
 </html>
