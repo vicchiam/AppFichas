@@ -68,43 +68,123 @@ public class UserController extends HttpServlet {
 		
 		String action=request.getParameter("action");		
 		
+		request.setAttribute("typeNames", User.typeNames);
+		request.setAttribute("stateNames", User.stateNames);
+		
 		if(action.equals("list")){
-			request.setAttribute("typeNames", User.typeNames);
-			request.setAttribute("stateNames", User.stateNames);
-			
-			Collection<Window> windows=new ArrayList<Window>();
-			//windows.add(new Window("USR",400,350,"Usuario"));
-			//windows.add(new Window("MARK",400,350,"Marca"));
-			request.setAttribute("windows", windows);
-			
-			String userName=request.getParameter("f_user");
-			String email=request.getParameter("f_mail");
-			String type=request.getParameter("f_type");
-			String state=request.getParameter("f_state");
-			
-			//log.info("User:"+userName+" Mail:"+email+" Type:"+type+" State:"+state);
-			
-			UserDAO userDAO=new UserDAOImpl();
-			Collection<User> listUsers=userDAO.listUsers(userName, email, type, state);
-			
-			//Collection<User> listUsers=Test.getUsers();
-			request.setAttribute("listUsers", listUsers);
-			if(request.getParameter("ajax")==null){
-				ServletUtils.setResponseController(this, "/jsp/users/user").forward(request, response);
-			}
-			else{
-				ServletUtils.setResponseController(this, "/jsp/users/listUsers").forward(request, response);
-			}			
+			this.showListUsers(request, response);	
 		}		
-		else if(action.equals("startSession")){			
-			
-			
+		else if(action.equals("showNewUser")){			
+			this.showNewUser(request, response);			
+		}
+		else if(action.equals("showUpdateUser")){
+			this.showUpdateUser(request, response);
+		}
+		else if(action.equals("saveUser")){
+			this.saveUser(request, response);	
+		}
+		else if(action.equals("changeStateUser")){
+			this.changeStateUser(request, response);	
+		}
+		else if(action.equals("showChangePassword")){
+			this.showChangePassword(request, response);	
 		}
 		else{
-			//ServletUtils.setResponseController(this, "index").forward(request, response);
+			ServletUtils.setResponseController(this, "/jsp/index").forward(request, response);
+		}	
+		
+	}
+	
+	private void showListUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		Collection<Window> windows=new ArrayList<Window>();
+		windows.add(new Window("USR",400,160,"Usuario"));			
+		request.setAttribute("windows", windows);
+		
+		String userName=request.getParameter("f_user");
+		request.setAttribute("f_user", userName);
+		String email=request.getParameter("f_mail");
+		request.setAttribute("f_mail", email);
+		String type=request.getParameter("f_type");
+		request.setAttribute("f_type", type);
+		String state=request.getParameter("f_state");
+		request.setAttribute("f_state", state);
+		
+		UserDAO userDAO=new UserDAOImpl();
+		Collection<User> listUsers=userDAO.listUsers(userName, email, type, state);
+		
+		//Collection<User> listUsers=Test.getUsers();
+		request.setAttribute("listUsers", listUsers);
+		if(request.getParameter("ajax")==null){
+			ServletUtils.setResponseController(this, "/jsp/users/user").forward(request, response);
 		}
+		else{
+			ServletUtils.setResponseController(this, "/jsp/users/listUsers").forward(request, response);
+		}		
+	}
+	
+	private void showNewUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.setAttribute("user",new User());		
+		ServletUtils.setResponseController(this, "/jsp/users/formUser").forward(request, response);
+	}
+	
+	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String id=request.getParameter("id");
 		
+		UserDAO userDAO=new UserDAOImpl();
+		User user=userDAO.getUser(id);
+		request.setAttribute("user",user);
 		
+		ServletUtils.setResponseController(this, "/jsp/users/formUser").forward(request, response);
+	}
+	
+	private void showChangePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String id=request.getParameter("id");
+		request.setAttribute("id",id);
+		
+		ServletUtils.setResponseController(this, "/jsp/users/formPassword").forward(request, response);
+	}
+	
+	private void saveUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String id=request.getParameter("id");
+		String userName=request.getParameter("user");
+		String mail=request.getParameter("mail");
+		String type=request.getParameter("type");
+		
+		User user=new User();
+		user.setId(Integer.parseInt(id));
+		user.setUser(userName);
+		user.setMail(mail);
+		user.setType(Integer.parseInt(type));		
+		
+		UserDAO userDAO=new UserDAOImpl();		
+		if(user.getId()==0){
+			user=userDAO.createUser(user);			
+		}
+		else{
+			user=userDAO.updateUser(user);
+		}		
+		
+		response.setContentType("text/html");
+		if(user!=null){
+			response.getWriter().print("ok");
+		}
+		else{
+			response.getWriter().print("error");
+		}	
+		
+	}
+	
+	private void changeStateUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String id=request.getParameter("id");
+		UserDAO userDAO=new UserDAOImpl();
+		
+		response.setContentType("text/html");
+		if(userDAO.changeStateUser(id)){
+			response.getWriter().print("ok");
+		}
+		else{
+			response.getWriter().print("error");
+		}
 	}
 
 }

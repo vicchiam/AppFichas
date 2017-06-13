@@ -112,4 +112,5 @@ public class User implements Serializable{
 	public String getStateName(){
 		return User.stateNames[this.state];
 	}
+	
 }

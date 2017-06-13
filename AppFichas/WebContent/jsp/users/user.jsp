@@ -9,7 +9,7 @@
 		<c:import url="/jsp/header.jsp"></c:import>
 		<script type="text/javascript" src="<c:url value="/resources/js/user.js" />"></script> 
 	</head>
-<body>
+<body onload="Init()">
 	<section id="container">
 		<c:import url="/jsp/menu.jsp"></c:import>
 		<section id="content">

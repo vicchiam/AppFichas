@@ -63,6 +63,10 @@ table{
 	text-align:center;
 }
 
+.script{
+	visibility:hidden;
+}
+
 /****List************************************/
 
 .list{
@@ -87,13 +91,15 @@ table{
 }
 
 .list tr:nth-child(even){
-	background-color:#FFF5EE;	
+	background-color:#F8F8FF;	
 }
 
+/*
 .row:hover{
-	background-color:#f00 !important;
+	background-color:#4682B4 !important;
 	color:#fff;
 }
+*/
 
 .filtro td{
 	border:none !important;
@@ -110,3 +116,54 @@ table{
 	cursor:pointer;
 }
 
+
+/*********Form***********************/
+
+.form table{
+	width:90%;
+	margin:5px auto;
+}
+
+.form td{
+	padding:5px;
+}
+
+/*********Windows********************/
+
+.modal{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0px;
+    background-color: #cccccc;
+    opacity:0.80;    	
+}
+
+.window{
+    position:fixed;
+    top:50px;
+    left:50%;
+    border:1px solid #000000;
+    background-color:#ffffff;   
+	border-radius:5px;	
+}
+
+.window .window_head{
+    border-bottom:1px solid #000000;
+    height:22px;
+    padding:2px;
+    font-size:16px;
+    font-weight:bold;
+	background-color:#999999;
+	color:#ffffff;
+	border-radius-top-left:5px;
+	border-radius-top-right:5px;
+}
+
+.window .window_head img{
+    float:right;
+    width:25px;
+    margin-right:5px;
+    cursor:pointer;
+}

@@ -5,3 +5,4 @@
 <link href="<c:url value="/resources/css/jquery-ui.css" />" rel="stylesheet" />
 <script type="text/javascript" src="<c:url value="/resources/js/jquery-3.2.1.js" />" ></script>
 <script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.js" />"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/main.js" />"></script>
