@@ -8,7 +8,7 @@
 				<a class="level1" href="#">Gestión</a>
 				<ul class="level2">
 					<li><a class="level2" href="/AppFichas/Users?action=list">Usuarios</a></li>
-					<li><a class="level2" href="#">Marcas</a></li>
+					<li><a class="level2" href="/AppFichas/Trademarks?action=list">Marcas</a></li>
 					<li><a class="level2" href="#">Centros</a></li>
 					<li><a class="level2" href="#">Envase</a></li>
 					<li><a class="level2" href="#">Embalaje</a></li>

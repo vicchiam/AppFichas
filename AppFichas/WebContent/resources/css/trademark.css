@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+#trademark{
+	width:100%;
+}
+
+.trademark_image{
+	width:40px;
+	cursor:pointer;
+}

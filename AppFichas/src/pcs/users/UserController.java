@@ -27,9 +27,7 @@ public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LogManager.getLogger("UserController: ");
 	
-	private String pathJSP;
-       
-    /**
+	/**
      * @see HttpServlet#HttpServlet()
      */
     public UserController() {
@@ -88,6 +86,9 @@ public class UserController extends HttpServlet {
 		}
 		else if(action.equals("showChangePassword")){
 			this.showChangePassword(request, response);	
+		}
+		else if(action.equals("savePassword")){
+			this.savePassword(request, response);	
 		}
 		else{
 			ServletUtils.setResponseController(this, "/jsp/index").forward(request, response);
@@ -187,4 +188,19 @@ public class UserController extends HttpServlet {
 		}
 	}
 
+	private void savePassword(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String id=request.getParameter("id");
+		String password=request.getParameter("password");
+		
+		UserDAO userDAO=new UserDAOImpl();
+		response.setContentType("text/html");
+		if(userDAO.changePassword(id, password)){
+			response.getWriter().print("ok");
+		}
+		else{
+			response.getWriter().print("error");
+		}
+		
+	}
+	
 }

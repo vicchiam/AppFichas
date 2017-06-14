@@ -53,6 +53,19 @@ function ShowUpdateUser(id){
 	});		
 }
 
+function ShowChangePassword(id){
+	var url="/AppFichas/Users";	
+	var data={
+			"action":"showChangePassword",
+			"id":id
+	};
+		
+	$.post(url,data,function(result){
+		$("#dynamic_USR").html(result);
+		OpenWindow("USR");
+	});		
+}
+
 function ChangeStateUser(id){
 	if(confirm("Seguro que deseas modificar el estado del usuario")){
 		var url="/AppFichas/Users";	
@@ -103,19 +116,39 @@ function Save(){
 			alert(result);
 		}
 		CloseWindow("USR");
-	});
-	
+	});	
 }
 
-function showChangePassword(id){
+function SavePassword(){
+	var id=$("#_id").val();
+	var pass=$("#password").val();
+	var rpass=$("#rpassword").val();
+	
+	if(pass.length<3){
+		alert("Debes indicar una contraseña de al menos 3 carateres");
+		return;
+	}
+	if(pass!=rpass){
+		alert("Las contraseñas no coinciden");
+		return;
+	}
+	
 	var url="/AppFichas/Users";	
 	var data={
-			"action":"showUpdateUser",
-			"id":id
+			"action":"savePassword",
+			"id":id,
+			"password":pass
 	};
-		
+	
 	$.post(url,data,function(result){
-		$("#dynamic_USR").html(result);
-		OpenWindow("USR");
-	});		
+		if(result=="ok"){
+			alert("Contraseña modificada correctamente");
+			Search();
+		}
+		else{
+			alert(result);
+		}
+		CloseWindow("USR");
+	});	
 }
+
