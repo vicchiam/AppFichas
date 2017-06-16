@@ -87,15 +87,27 @@ function DeleteTrademark(id){
 	}
 }
 
-function ShowImageUpdater(id){
+function ShowImageUpdater(id,path){
 	var url="/AppFichas/Trademarks";	
 	var data={
 			"action":"showImageUpdater",
-			"id":id
+			"id":id,
+			"path":path
 	};
 		
 	$.post(url,data,function(result){
 		$("#dynamic_IMG").html(result);	
 		OpenWindow("IMG");
 	});
+}
+
+function CallbackImageUpdater(result){
+	if(result=="ok"){
+		alert("Imagen guardada");
+		CloseWindow("IMG");
+		Search();
+	}
+	else{
+		alert("result");
+	}
 }

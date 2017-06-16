@@ -14,8 +14,8 @@ import pcs.utils.JDBCUtil;
 
 public class TrademarkDAOImpl implements TrademarkDAO{
 	
-	private String SELECT_SQL="SELECT id, name, id_image FROM trademark ";
-	private String SELECT_ID_SQL="SELECT id, name, id_image FROM trademark WHERE id=?";
+	private String SELECT_SQL="SELECT t.id, t.name, t.id_image, i.path FROM trademark t left join image i on t.id_image=i.id ";
+	private String SELECT_ID_SQL="SELECT t.id, t.name, t.id_image, i.path FROM trademark t left join image i on t.id_image=i.id  WHERE t.id=?";
 	private String INSERT_SQL="INSERT INTO trademark (name,id_image) VALUES(?,NULL)";
 	private String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
 	private String DELETE_SQL="DELETE FROM trademark WHERE id=?";

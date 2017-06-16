@@ -26,7 +26,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" class="center">
-				<input type="button" value="Guardar" onclick="Save()" />
+				<input type="button" class="button" value="Guardar" onclick="Save()" />
 			</td>
 		</tr>
 	</table>

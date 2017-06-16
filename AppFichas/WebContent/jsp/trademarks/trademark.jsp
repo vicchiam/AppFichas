@@ -5,8 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Insert title here</title>
-		<link href="<c:url value="/resources/css/trademark.css" />" rel="stylesheet" />
-		<link href="<c:url value="/resources/css/libs/fileUpload.css" />" rel="stylesheet" />
+		<link href="<c:url value="/resources/css/trademark.css" />" rel="stylesheet" />		
 		<c:import url="/jsp/header.jsp"></c:import>
 		<script type="text/javascript" src="<c:url value="/resources/js/trademark.js" />"></script> 
 	</head>

@@ -11,11 +11,9 @@
 			margin-left:-<c:out value='${window.width/2}' />px;			
 			">
 		<div class="window_head">
-			<span class="window_title"></span><c:out value='${window.title}' /></span>
+			<span class="window_title"><c:out value='${window.title}' /></span>
 			<img src="/AppFichas/resources/images/close.png" onclick="CloseWindow('<c:out value='${window.id}' />')" />
 		</div>
-		<div id="dynamic_<c:out value='${window.id}' />">
-			
-		</div>
+		<div class="dynamic" id="dynamic_<c:out value='${window.id}' />"></div>
 	</div>	
 </c:forEach>

@@ -20,13 +20,13 @@
 					</c:forEach>
 				</select>				
 			</td>
-			<td class="der"><img src="/AppFichas/resources/images/search.png" class="button" onclick="Search()"/></td>
+			<td class="der"><img src="/AppFichas/resources/images/search.png" class="img_button" onclick="Search()"/></td>
 		</tr>
 		<tr>
 			<th>Usuario</th>
 			<th>Email</th>
 			<th>Tipo</th>
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="button" onclick="ShowNewUser()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewUser()" /></th>				
 		</tr>			
 		<c:forEach var="user" items="${requestScope.listUsers}">
 		<tr class="row">
@@ -34,9 +34,9 @@
 			<td><c:out value = "${user.mail}"/></td>
 			<td><c:out value = "${user.typeName}"/></td>						
 			<td class="der">
-				<img title="Editar Usuario" src="/AppFichas/resources/images/edit.png" class="button" onclick="ShowUpdateUser('<c:out value = "${user.id}"/>')" />
-				<img title="Modificar contraseña" src="/AppFichas/resources/images/password.png" class="button" onclick="ShowChangePassword('<c:out value = "${user.id}"/>')" />
-				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="button" onclick="ChangeStateUser('<c:out value = "${user.id}"/>')" />
+				<img title="Editar Usuario" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateUser('<c:out value = "${user.id}"/>')" />
+				<img title="Modificar contraseña" src="/AppFichas/resources/images/password.png" class="img_button" onclick="ShowChangePassword('<c:out value = "${user.id}"/>')" />
+				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateUser('<c:out value = "${user.id}"/>')" />
 			</td>
          	</tr>
       	</c:forEach>

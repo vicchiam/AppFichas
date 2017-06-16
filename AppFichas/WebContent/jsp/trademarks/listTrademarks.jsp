@@ -7,20 +7,20 @@
 		<tr class="filtro">
 			<td></td>
 			<td><input id="f_name" type="text" value="<c:out value='${requestScope.f_name}'/>" /></td>
-			<td class="der"><img src="/AppFichas/resources/images/search.png" class="button" onclick="Search()"/></td>
+			<td class="der"><img src="/AppFichas/resources/images/search.png" class="img_button" onclick="Search()"/></td>
 		</tr>
 		<tr>
 			<th>Imagen</th>
 			<th>Nombre</th>			
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="button" onclick="ShowNewTrademark()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewTrademark()" /></th>				
 		</tr>			
 		<c:forEach var="trademark" items="${requestScope.listTrademarks}">
 		<tr class="row">
-			<td class="center"><img class="trademark_image" src="/AppFichas/resources/images/no_image.png" onclick="ShowImageUpdater('<c:out value = "${trademark.id}"/>')"/></td>
+			<td class="center"><img class="trademark_image" src="${trademark.path}" onclick="ShowImageUpdater('<c:out value = "${trademark.id}"/>','<c:out value = "${trademark.path}"/>')"/></td>
 			<td><c:out value = "${trademark.name}"/></td>
 			<td class="der">
-				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="button" onclick="ShowUpdateTrademark('<c:out value = "${trademark.id}"/>')" />
-				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/delete.png" class="button" onclick="DeleteTrademark('<c:out value = "${trademark.id}"/>')" />
+				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateTrademark('<c:out value = "${trademark.id}"/>')" />
+				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/delete.png" class="img_button" onclick="DeleteTrademark('<c:out value = "${trademark.id}"/>')" />
 			</td>
          	</tr>
       	</c:forEach>

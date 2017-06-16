@@ -1,18 +1,31 @@
 package pcs.trademark;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.RequestContext;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
 import pcs.main.Window;
+import pcs.main.Params;
 import pcs.test.Test;
 import pcs.users.User;
+import pcs.utils.FileUtils;
 import pcs.utils.ServletUtils;
 
 /**
@@ -46,7 +59,7 @@ public class TrademarkController extends HttpServlet {
 			ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
 		}
 		
-		String action=request.getParameter("action");
+		String action=request.getParameter("action");		
 		
 		if(action.equals("list")){
 			this.showListTrademarks(request, response);
@@ -65,6 +78,9 @@ public class TrademarkController extends HttpServlet {
 		}
 		else if(action.equals("showImageUpdater")){
 			this.showImageUpdater(request, response);
+		}
+		else if(action.equals("upload")){
+			this.updateFile(request, response);			
 		}
 		
 	}
@@ -143,10 +159,66 @@ public class TrademarkController extends HttpServlet {
 	}
 	
 	private void showImageUpdater(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.setAttribute("action","/AppFichas/Trademarks?action=upload");
+				
 		String id=request.getParameter("id");
 		request.setAttribute("id", id);
-		
+		String path=request.getParameter("path");
+		request.setAttribute("path", path);
+						
 		ServletUtils.setResponseController(this, "/jsp/image/formImageUpload").forward(request, response);		
 	}
+	
+	private void updateFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String DIRECTORY = request.getServletContext().getRealPath("/");		
+		System.out.println(DIRECTORY);
+		
+		String id="";
+						
+		if(ServletFileUpload.isMultipartContent(request)){
+			try {
+				String html="";
+				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(new ServletRequestContext(request));
+				for(FileItem item: multiparts){
+					if (item.isFormField()) {
+						String name = item.getFieldName();
+						if(name.equals("_id")){
+							id=item.getString();							
+						}					    					    
+				    } else {
+				    	String realName = new File(item.getName()).getName();				    					    	
+				    	String extension=FileUtils.getFileExtension(realName);
+				    	if(extension!=null){
+				    		String name=id+"_trademark"+extension;
+				    		item.write( new File(DIRECTORY+Params.UPLOAD_DIRECTORY + File.separator + name));	
+				    		html=this.doUploadMessage("ok");
+				    	}
+				    	else{
+				    		html=this.doUploadMessage("File Name Error");
+				    	}
+				    }
+				}
+				PrintWriter out=response.getWriter();
+				out.println(html);				
+			} catch (FileUploadException e) {				
+				e.printStackTrace();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	private String doUploadMessage(String message){
+		String html="";
+		html+="<html><head><title></title><body>";
+		html+="<script type='text/javascript'>";
+		html+="parent.CallbackImageUpdater('"+message+"')";
+		html+="</script></body></html>";
+		return html;		
+	} 
+	
+	
+	
 
 }
