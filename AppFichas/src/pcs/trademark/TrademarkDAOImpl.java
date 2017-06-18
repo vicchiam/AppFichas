@@ -14,11 +14,12 @@ import pcs.utils.JDBCUtil;
 
 public class TrademarkDAOImpl implements TrademarkDAO{
 	
-	private String SELECT_SQL="SELECT t.id, t.name, t.id_image, i.path FROM trademark t left join image i on t.id_image=i.id ";
-	private String SELECT_ID_SQL="SELECT t.id, t.name, t.id_image, i.path FROM trademark t left join image i on t.id_image=i.id  WHERE t.id=?";
-	private String INSERT_SQL="INSERT INTO trademark (name,id_image) VALUES(?,NULL)";
+	private String SELECT_SQL="SELECT id, name, path FROM trademark t  ";
+	private String SELECT_ID_SQL="SELECT id, name, path FROM trademark WHERE id=?";
+	private String INSERT_SQL="INSERT INTO trademark (name,path) VALUES(?,NULL)";
 	private String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
 	private String DELETE_SQL="DELETE FROM trademark WHERE id=?";
+	private String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
 	
 	public TrademarkDAOImpl() {}
 
@@ -143,6 +144,28 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		return false;
 	}
 	
+	@Override
+	public boolean updateTrademarkPath(String id, String path) {
+		try {
+			Connection conn=JDBCUtil.getConnection();
+			PreparedStatement ps=conn.prepareStatement(UPDATE_PATH_SQL);
+			ps.setString(1, path);
+			ps.setInt(2, Integer.parseInt(id));
+			int res=ps.executeUpdate();			
+			ps.close();
+			if(res>0){
+				return true;
+			}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			JDBCUtil.closeConnection();
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	private PreparedStatement prepareParams(Connection conn, String name) throws SQLException{
 		String sql=SELECT_SQL;
 		List<String> where=new ArrayList<>();
@@ -158,6 +181,8 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		sql+=" ORDER BY name";
 		
 		return JDBCUtil.getPreparedStatement(conn, sql , params);			
-	}	
+	}
+
+		
 
 }

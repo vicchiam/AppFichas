@@ -12,14 +12,12 @@ public class Trademark implements Serializable{
 	
 	private int id;
 	private String name;
-	private int id_image;
 	private String path;
 	
 	public Trademark() {
 		super();
 		this.id=0;
 		this.name="";
-		this.id_image=0;
 		this.path="";
 	}
 	
@@ -27,15 +25,13 @@ public class Trademark implements Serializable{
 		super();
 		this.id = id;
 		this.name = name;
-		this.id_image=0;
 		this.path="";
 	}
 
-	public Trademark(int id, String name, int id_image, String path) {
+	public Trademark(int id, String name, String path) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.id_image=id_image;
+		this.name = name;		
 		this.path=path;
 	}
 
@@ -55,14 +51,6 @@ public class Trademark implements Serializable{
 		this.name = name;
 	}
 	
-	public int getId_image() {
-		return id_image;
-	}
-
-	public void setId_image(int id_image) {
-		this.id_image = id_image;
-	}
-
 	public String getPath() {
 		if(path==null || path.length()==0){
 			return Params.NO_IMAGE;
@@ -77,9 +65,8 @@ public class Trademark implements Serializable{
 	public static Trademark makeTrademark(ResultSet rs) throws SQLException{
 		int id=rs.getInt("id");
 		String name=rs.getString("name");
-		int id_image=rs.getInt("id_image");
 		String path=rs.getString("path");
-		return new Trademark(id,name,id_image,path);
+		return new Trademark(id,name,path);
 	}
 	
 	

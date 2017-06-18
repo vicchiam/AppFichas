@@ -16,7 +16,7 @@
 		</tr>			
 		<c:forEach var="trademark" items="${requestScope.listTrademarks}">
 		<tr class="row">
-			<td class="center"><img class="trademark_image" src="${trademark.path}" onclick="ShowImageUpdater('<c:out value = "${trademark.id}"/>','<c:out value = "${trademark.path}"/>')"/></td>
+			<td class="center"><img class="trademark_image" src="/AppFichas<c:out value = "${trademark.path}"/>" onclick="ShowImageUpdater('<c:out value = "${trademark.id}"/>','<c:out value = "${trademark.path}"/>')"/></td>
 			<td><c:out value = "${trademark.name}"/></td>
 			<td class="der">
 				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateTrademark('<c:out value = "${trademark.id}"/>')" />

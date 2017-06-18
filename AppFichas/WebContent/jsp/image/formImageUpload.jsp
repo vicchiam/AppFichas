@@ -7,7 +7,7 @@
 		<input type="hidden" id="_id" name="_id" value="<c:out value='${requestScope.id}'/>" />	
 		<div class="droppable center" style="width:80%;height:80%;padding:10%;background-color:#1E90FF;color:#fff">Haz click o arrastra el fichero aquí</div>	
 		<div class="output center">
-			<img style="max-width:200px;max-height:200px" src="<c:out value='${requestScope.path}'/>" />
+			<img style="max-width:200px;max-height:200px" src="/AppFichas<c:out value='${requestScope.path}'/>" />
 		</div>	
 		<div id="submit" class="center" style="display:none;max-height:140px;">
 			<input type="submit" class="button" value="Añadir" />

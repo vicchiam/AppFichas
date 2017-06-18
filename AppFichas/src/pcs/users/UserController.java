@@ -15,6 +15,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import pcs.main.Params;
 import pcs.main.Window;
 import pcs.test.Test;
 import pcs.utils.ServletUtils;
@@ -91,7 +92,7 @@ public class UserController extends HttpServlet {
 			this.savePassword(request, response);	
 		}
 		else{
-			ServletUtils.setResponseController(this, "/jsp/index").forward(request, response);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"index").forward(request, response);
 		}	
 		
 	}
@@ -116,16 +117,16 @@ public class UserController extends HttpServlet {
 		//Collection<User> listUsers=Test.getUsers();
 		request.setAttribute("listUsers", listUsers);
 		if(request.getParameter("ajax")==null){
-			ServletUtils.setResponseController(this, "/jsp/users/user").forward(request, response);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/user").forward(request, response);
 		}
 		else{
-			ServletUtils.setResponseController(this, "/jsp/users/listUsers").forward(request, response);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/listUsers").forward(request, response);
 		}		
 	}
 	
 	private void showNewUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		request.setAttribute("user",new User());		
-		ServletUtils.setResponseController(this, "/jsp/users/formUser").forward(request, response);
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 	}
 	
 	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -135,14 +136,14 @@ public class UserController extends HttpServlet {
 		User user=userDAO.getUser(id);
 		request.setAttribute("user",user);
 		
-		ServletUtils.setResponseController(this, "/jsp/users/formUser").forward(request, response);
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 	}
 	
 	private void showChangePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		request.setAttribute("id",id);
 		
-		ServletUtils.setResponseController(this, "/jsp/users/formPassword").forward(request, response);
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formPassword").forward(request, response);
 	}
 	
 	private void saveUser(HttpServletRequest request, HttpServletResponse response) throws IOException{

@@ -13,5 +13,7 @@ public interface TrademarkDAO {
 	public Trademark updateTrademark(Trademark trademark);
 	
 	public boolean deleteTrademark(String id);
+	
+	public boolean updateTrademarkPath(String id, String path);
 
 }

@@ -99,16 +99,16 @@ public class TrademarkController extends HttpServlet {
 		request.setAttribute("listTrademarks", list);
 		
 		if(request.getParameter("ajax")==null){
-			ServletUtils.setResponseController(this, "/jsp/trademarks/trademark").forward(request, response);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/trademark").forward(request, response);
 		}
 		else{
-			ServletUtils.setResponseController(this, "/jsp/trademarks/listTrademarks").forward(request, response);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/listTrademarks").forward(request, response);
 		}		
 	}
 	
 	private void showNewTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		request.setAttribute("trademark",new Trademark());		
-		ServletUtils.setResponseController(this, "/jsp/trademarks/formTrademark").forward(request, response);
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);
 	}
 	
 	private void showUpdateTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -118,7 +118,7 @@ public class TrademarkController extends HttpServlet {
 		Trademark trademark=trademarkDAO.getTrademark(id);		
 				
 		request.setAttribute("trademark",trademark);		
-		ServletUtils.setResponseController(this, "/jsp/trademarks/formTrademark").forward(request, response);
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);
 	}
 	
 	private void saveTrademark(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -166,7 +166,7 @@ public class TrademarkController extends HttpServlet {
 		String path=request.getParameter("path");
 		request.setAttribute("path", path);
 						
-		ServletUtils.setResponseController(this, "/jsp/image/formImageUpload").forward(request, response);		
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"image/formImageUpload").forward(request, response);		
 	}
 	
 	private void updateFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
@@ -190,8 +190,17 @@ public class TrademarkController extends HttpServlet {
 				    	String extension=FileUtils.getFileExtension(realName);
 				    	if(extension!=null){
 				    		String name=id+"_trademark"+extension;
-				    		item.write( new File(DIRECTORY+Params.UPLOAD_DIRECTORY + File.separator + name));	
-				    		html=this.doUploadMessage("ok");
+				    		String realPath=DIRECTORY+Params.UPLOAD_DIRECTORY + File.separator + name;
+				    		String relativePath=Params.UPLOAD_DIRECTORY + File.separator + name;
+				    		
+				    		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
+				    		if(trademarkDAO.updateTrademarkPath(id, relativePath)){
+				    			item.write( new File(realPath));	
+				    			html=this.doUploadMessage("ok");
+				    		}
+				    		else{
+				    			this.doUploadMessage("SQL Error");
+				    		}
 				    	}
 				    	else{
 				    		html=this.doUploadMessage("File Name Error");
@@ -216,9 +225,6 @@ public class TrademarkController extends HttpServlet {
 		html+="parent.CallbackImageUpdater('"+message+"')";
 		html+="</script></body></html>";
 		return html;		
-	} 
-	
-	
-	
+	} 	
 
 }
