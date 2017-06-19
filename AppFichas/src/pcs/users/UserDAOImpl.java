@@ -50,7 +50,7 @@ public class UserDAOImpl implements UserDAO{
 	}
 	
 	@Override
-	public Collection<User> listUsers(String userName, String mail, String type, String state) {
+	public Collection<User> listUsers(String userName, String mail, int type, int state) {
 		Collection<User> listUsers=new ArrayList<>();
 		try {
 			Connection conn=JDBCUtil.getConnection();
@@ -74,7 +74,7 @@ public class UserDAOImpl implements UserDAO{
 	}
 	
 	@Override
-	public User getUser(String id) {
+	public User getUser(int id) {
 		User user=new User();
 		try {
 			Connection conn=JDBCUtil.getConnection();
@@ -100,12 +100,12 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public boolean changePassword(String id, String password) {
+	public boolean changePassword(int id, String password) {
 		try {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(UPDATE_PASSWORD_SQL);
 			ps.setString(1, password);
-			ps.setInt(2, Integer.parseInt(id));
+			ps.setInt(2, id);
 			int res=ps.executeUpdate();			
 			ps.close();
 			if(res>0){
@@ -178,11 +178,11 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public boolean changeStateUser(String id) {
+	public boolean changeStateUser(int id) {
 		try {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(UPDATE_STATE_SQL);
-			ps.setInt(1, Integer.parseInt(id));
+			ps.setInt(1, id);
 			int res=ps.executeUpdate();			
 			ps.close();
 			if(res>0){
@@ -199,10 +199,13 @@ public class UserDAOImpl implements UserDAO{
 		return false;
 	}	
 	
-	private PreparedStatement prepareParams(Connection conn, String userName, String mail, String type, String state) throws SQLException{
+	private PreparedStatement prepareParams(Connection conn, String userName, String mail, int type, int state) throws SQLException{
 		String sql=SELECT_SQL;
 		List<String> where=new ArrayList<>();
-		List<Object> params=new ArrayList<>();		
+		List<Object> params=new ArrayList<>();
+		
+		where.add(" state=? ");
+		params.add(state);
 		if(userName!=null && userName.length()>0){		
 			where.add(" user like ? ");
 			params.add(userName+"%");
@@ -211,17 +214,10 @@ public class UserDAOImpl implements UserDAO{
 			where.add(" mail like ? ");
 			params.add(mail+"%");			
 		}
-		if(type!=null && type.length()>0){
+		if(type>0){
 			where.add(" type=? ");
 			params.add(type);
-		}
-		if(state!=null && state.length()>0){
-			where.add(" state=? ");
-			params.add(state);
-		}
-		else if(state==null){
-			where.add(" state=1 ");			
-		}
+		}		
 		
 		if(where.size()>0){
 			sql+=" WHERE "+String.join(" AND ", where);

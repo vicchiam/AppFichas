@@ -6,14 +6,14 @@ public interface TrademarkDAO {
 	
 	public Collection<Trademark> listTrademarks(String name);
 	
-	public Trademark getTrademark(String id);
+	public Trademark getTrademark(int id);
 	
 	public Trademark createTrademark(Trademark trademark);
 	
 	public Trademark updateTrademark(Trademark trademark);
 	
-	public boolean deleteTrademark(String id);
+	public boolean deleteTrademark(int id);
 	
-	public boolean updateTrademarkPath(String id, String path);
+	public boolean updateTrademarkPath(int id, String path);
 
 }

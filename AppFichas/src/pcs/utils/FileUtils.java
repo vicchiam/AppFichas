@@ -1,7 +1,7 @@
 package pcs.utils;
 
 public class FileUtils {
-
+	
 	public static String getFileExtension(String fileName){
 		String extension = "";
 
@@ -12,5 +12,7 @@ public class FileUtils {
 		}
 		return null;		
 	}
+	
+	
 	
 }

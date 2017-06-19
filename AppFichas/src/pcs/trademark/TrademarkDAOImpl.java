@@ -48,7 +48,7 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	}
 
 	@Override
-	public Trademark getTrademark(String id) {
+	public Trademark getTrademark(int id) {
 		Trademark trademark=new Trademark();
 		try {
 			Connection conn=JDBCUtil.getConnection();
@@ -124,11 +124,11 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	}
 
 	@Override
-	public boolean deleteTrademark(String id) {
+	public boolean deleteTrademark(int id) {
 		try {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(DELETE_SQL);
-			ps.setString(1, id);
+			ps.setInt(1, id);
 			int res=ps.executeUpdate();			
 			ps.close();
 			if(res>0){
@@ -145,12 +145,12 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	}
 	
 	@Override
-	public boolean updateTrademarkPath(String id, String path) {
+	public boolean updateTrademarkPath(int id, String path) {
 		try {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(UPDATE_PATH_SQL);
 			ps.setString(1, path);
-			ps.setInt(2, Integer.parseInt(id));
+			ps.setInt(2, id);
 			int res=ps.executeUpdate();			
 			ps.close();
 			if(res>0){

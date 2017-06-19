@@ -62,7 +62,7 @@ public class UserController extends HttpServlet {
 		
 		HttpSession session=request.getSession();
 		if(!ServletUtils.authorized(session)){
-			ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
+			ServletUtils.setResponseController(this,Params.JSP_PATH+"login").forward(request, response);
 		}
 		
 		String action=request.getParameter("action");		
@@ -91,6 +91,9 @@ public class UserController extends HttpServlet {
 		else if(action.equals("savePassword")){
 			this.savePassword(request, response);	
 		}
+		else if(action.equals("autocompleteUser")){
+			this.listUsersAutocomplete(request, response);
+		}
 		else{
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"index").forward(request, response);
 		}	
@@ -99,20 +102,22 @@ public class UserController extends HttpServlet {
 	
 	private void showListUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Collection<Window> windows=new ArrayList<Window>();
-		windows.add(new Window("USR",400,160,"Usuario"));			
+		windows.add(new Window("USR",400,180,"Usuario"));			
 		request.setAttribute("windows", windows);
 		
 		String userName=request.getParameter("f_user");
 		request.setAttribute("f_user", userName);
-		String email=request.getParameter("f_mail");
-		request.setAttribute("f_mail", email);
+		String mail=request.getParameter("f_mail");
+		request.setAttribute("f_mail", mail);
 		String type=request.getParameter("f_type");
-		request.setAttribute("f_type", type);
+		if(type==null) type="0";
+		request.setAttribute("f_type", type);		
 		String state=request.getParameter("f_state");
-		request.setAttribute("f_state", state);
+		if(state==null) state="1";
+		request.setAttribute("f_state", state);		
 		
-		UserDAO userDAO=new UserDAOImpl();
-		Collection<User> listUsers=userDAO.listUsers(userName, email, type, state);
+		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
+		Collection<User> listUsers=userBusiness.listUsers(userName, mail, type, state);
 		
 		//Collection<User> listUsers=Test.getUsers();
 		request.setAttribute("listUsers", listUsers);
@@ -132,8 +137,8 @@ public class UserController extends HttpServlet {
 	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		
-		UserDAO userDAO=new UserDAOImpl();
-		User user=userDAO.getUser(id);
+		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
+		User user=userBusiness.getUser(id);
 		request.setAttribute("user",user);
 		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
@@ -152,19 +157,8 @@ public class UserController extends HttpServlet {
 		String mail=request.getParameter("mail");
 		String type=request.getParameter("type");
 		
-		User user=new User();
-		user.setId(Integer.parseInt(id));
-		user.setUser(userName);
-		user.setMail(mail);
-		user.setType(Integer.parseInt(type));		
-		
-		UserDAO userDAO=new UserDAOImpl();		
-		if(user.getId()==0){
-			user=userDAO.createUser(user);			
-		}
-		else{
-			user=userDAO.updateUser(user);
-		}		
+		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());	
+		User user=userBusiness.saveUser(id, userName, mail, type);
 		
 		response.setContentType("text/html");
 		if(user!=null){
@@ -178,10 +172,11 @@ public class UserController extends HttpServlet {
 	
 	private void changeStateUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String id=request.getParameter("id");
-		UserDAO userDAO=new UserDAOImpl();
+		
+		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
 		
 		response.setContentType("text/html");
-		if(userDAO.changeStateUser(id)){
+		if(userBusiness.changeStateUser(id)){
 			response.getWriter().print("ok");
 		}
 		else{
@@ -193,15 +188,34 @@ public class UserController extends HttpServlet {
 		String id=request.getParameter("id");
 		String password=request.getParameter("password");
 		
-		UserDAO userDAO=new UserDAOImpl();
+		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
+		
 		response.setContentType("text/html");
-		if(userDAO.changePassword(id, password)){
+		if(userBusiness.savePassword(id, password)){
 			response.getWriter().print("ok");
 		}
 		else{
 			response.getWriter().print("error");
 		}
 		
+	}
+	
+	private void listUsersAutocomplete(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String userName=request.getParameter("f_user");
+		request.setAttribute("f_user", userName);
+		String mail=request.getParameter("f_mail");
+		request.setAttribute("f_mail", mail);
+		String type=request.getParameter("f_type");
+		request.setAttribute("f_type", type);		
+		String state=request.getParameter("f_state");		
+		request.setAttribute("f_state", state);				
+		
+		String json=new UserBusiness(new UserDAOImpl()).listUsersAutocomplete("", "", "0", "1");
+		
+		//response.setCharacterEncoding("UTF-8");
+		//response.setContentType("application/json");
+		response.setContentType("text/html");
+		response.getWriter().print(json);		
 	}
 	
 }

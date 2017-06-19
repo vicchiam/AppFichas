@@ -31,3 +31,6 @@
 		</tr>
 	</table>
 </div>
+<div class="script">
+	<script type="text/javascript">InitForm();</script> 
+</div>

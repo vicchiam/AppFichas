@@ -94,10 +94,10 @@ public class TrademarkController extends HttpServlet {
 		String name=request.getParameter("f_name");
 		request.setAttribute("f_name", name);
 		
-		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
-		Collection<Trademark> list=trademarkDAO.listTrademarks(name);		
-		request.setAttribute("listTrademarks", list);
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		Collection<Trademark> list=trademarkBusiness.listTrademarks(name);
 		
+		request.setAttribute("listTrademarks", list);		
 		if(request.getParameter("ajax")==null){
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/trademark").forward(request, response);
 		}
@@ -114,8 +114,8 @@ public class TrademarkController extends HttpServlet {
 	private void showUpdateTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		
-		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
-		Trademark trademark=trademarkDAO.getTrademark(id);		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		Trademark trademark=trademarkBusiness.getTrademark(Integer.parseInt(id));		
 				
 		request.setAttribute("trademark",trademark);		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);
@@ -125,16 +125,8 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");
 		String name=request.getParameter("name");
 		
-		Trademark trademark=new Trademark(Integer.parseInt(id), name);
-		
-		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
-		
-		if(trademark.getId()==0){
-			trademark=trademarkDAO.createTrademark(trademark);
-		}
-		else{
-			trademark=trademarkDAO.updateTrademark(trademark);
-		}
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		Trademark trademark=trademarkBusiness.saveTrademark(id, name);
 		
 		response.setContentType("text/html");
 		if(trademark!=null){
@@ -146,12 +138,21 @@ public class TrademarkController extends HttpServlet {
 	}
 	
 	private void deleteTrademark(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String DIRECTORY = request.getServletContext().getRealPath("/");
 		String id=request.getParameter("id");
 		
-		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		Trademark trademarkDeleted=trademarkBusiness.getTrademark(id);
+				
 		response.setContentType("text/html");
-		if(trademarkDAO.deleteTrademark(id)){
-			response.getWriter().print("ok");
+		if(trademarkBusiness.deleteTrademark(Integer.parseInt(id))){
+			String realPath=DIRECTORY+trademarkDeleted.getPath();
+			if(new File(realPath).delete()){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("File error");
+			}
 		}
 		else{
 			response.getWriter().print("error");
@@ -171,44 +172,17 @@ public class TrademarkController extends HttpServlet {
 	
 	private void updateFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String DIRECTORY = request.getServletContext().getRealPath("/");		
-		System.out.println(DIRECTORY);
-		
-		String id="";
+		System.out.println(DIRECTORY);		
 						
 		if(ServletFileUpload.isMultipartContent(request)){
 			try {
-				String html="";
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(new ServletRequestContext(request));
-				for(FileItem item: multiparts){
-					if (item.isFormField()) {
-						String name = item.getFieldName();
-						if(name.equals("_id")){
-							id=item.getString();							
-						}					    					    
-				    } else {
-				    	String realName = new File(item.getName()).getName();				    					    	
-				    	String extension=FileUtils.getFileExtension(realName);
-				    	if(extension!=null){
-				    		String name=id+"_trademark"+extension;
-				    		String realPath=DIRECTORY+Params.UPLOAD_DIRECTORY + File.separator + name;
-				    		String relativePath=Params.UPLOAD_DIRECTORY + File.separator + name;
-				    		
-				    		TrademarkDAO trademarkDAO=new TrademarkDAOImpl();
-				    		if(trademarkDAO.updateTrademarkPath(id, relativePath)){
-				    			item.write( new File(realPath));	
-				    			html=this.doUploadMessage("ok");
-				    		}
-				    		else{
-				    			this.doUploadMessage("SQL Error");
-				    		}
-				    	}
-				    	else{
-				    		html=this.doUploadMessage("File Name Error");
-				    	}
-				    }
-				}
+				
+				TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+				String resp=trademarkBusiness.uploadFile(multiparts, DIRECTORY);
+				
 				PrintWriter out=response.getWriter();
-				out.println(html);				
+				out.println(this.doUploadMessage(resp));				
 			} catch (FileUploadException e) {				
 				e.printStackTrace();
 			} catch(Exception e){

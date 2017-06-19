@@ -6,6 +6,60 @@ function Init(){
 	$("#f_mail").on("click", function () {
 	   $(this).select();
 	});
+	
+	$("#f_type").selectmenu();
+	
+	$("#f_state").checkboxradio({
+      icon: false
+    });
+	
+	/*
+	$("#f_user").autocomplete({
+		source: function( request, response ) {
+			$.post( {
+				url: "/AppFichas/Users",
+				dataType: "jsonp",
+				data: {
+					"action":"autocompleteUser",
+					"f_user":$("#f_user").val(),
+					"f_mail":$("#f_mail").val(),
+					"f_type":$("#f_type").val(),
+					"f_state":(($("#f_state").is(':checked'))?0:1)
+				},
+				success: function(data) {
+					alert(data);
+					response(data);					
+				}
+	        });
+	      },
+	      minLength: 3,
+	      select: function( event, ui ) {
+	        alert(ui.item.value+" / "+ui.item.id);
+	      }
+	});
+	*/
+	
+	var projects = [
+	                {
+	                  value: "jquery"	                  
+	                },
+	                {
+	                  value: "jquery-ui"	                  
+	                }
+	                ];
+	
+	$("#f_user").autocomplete({
+		source:"/AppFichas/Users?action=autocompleteUser",
+		//source:projects,
+		minLength: 2,
+	    select: function( event, ui ) {
+	    	 log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+	    }
+	});
+}
+
+function InitForm(){
+	$("#type").selectmenu();	
 }
 
 function Search(){
@@ -14,8 +68,9 @@ function Search(){
 	var type=$("#f_type").val();	
 	var state=(($("#f_state").is(':checked'))?0:1);
 	
-	var url="/AppFichas/Users?action=list";	
+	var url="/AppFichas/Users";	
 	var data={
+			"action":"list",
 			"ajax":"true",
 			"f_user":user,
 			"f_mail":mail,
