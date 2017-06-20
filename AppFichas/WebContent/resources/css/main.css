@@ -26,6 +26,28 @@ table{
 	border-spacing:0;	
 }
 
+input[type=text], select {
+    padding: 6px 10px;    
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=password], select {
+    padding: 6px 10px;    
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+ul{
+	list-style:none;	
+}
+
+/*******ID*************************/
+
 #container{
 	display:block;
 	position:relative;
@@ -69,7 +91,7 @@ table{
 
 /****Button**********************************/
 
-.button {
+.button_blue {
     background-color:#008CBA;
     border:1px solid #008CBA;
     color: white;
@@ -77,12 +99,47 @@ table{
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 13px;
+    cursor:pointer;
 }
 
-.button:hover {
+.button_blue:hover {
     background-color: #fff; 
     color: #008CBA;
+}
+
+.button_green {
+    background-color:#4CAF50;
+    border:1px solid #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    cursor:pointer;
+}
+
+.button_green:hover {
+    background-color: #fff; 
+    color: #4CAF50;
+}
+
+.button_red {
+    background-color:#f44336;
+    border:1px solid #f44336;
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    cursor:pointer;
+}
+
+.button_red:hover {
+    background-color: #fff; 
+    color: #f44336;
 }
 
 /****List************************************/
@@ -136,6 +193,11 @@ table{
 
 
 /*********Form***********************/
+
+.form{
+	width:100%;
+	height:100%;
+}
 
 .form table{
 	width:90%;

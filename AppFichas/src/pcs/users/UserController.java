@@ -18,6 +18,10 @@ import org.apache.log4j.Logger;
 import pcs.main.Params;
 import pcs.main.Window;
 import pcs.test.Test;
+import pcs.trademark.Trademark;
+import pcs.trademark.TrademarkBusiness;
+import pcs.trademark.TrademarkDAO;
+import pcs.trademark.TrademarkDAOImpl;
 import pcs.utils.ServletUtils;
 
 /**
@@ -79,20 +83,26 @@ public class UserController extends HttpServlet {
 		else if(action.equals("showUpdateUser")){
 			this.showUpdateUser(request, response);
 		}
+		else if(action.equals("showChangePassword")){
+			this.showChangePassword(request, response);	
+		}
+		else if(action.equals("showUserTrademarks")){
+			this.showuserTrademarks(request, response);	
+		}
 		else if(action.equals("saveUser")){
 			this.saveUser(request, response);	
 		}
 		else if(action.equals("changeStateUser")){
 			this.changeStateUser(request, response);	
-		}
-		else if(action.equals("showChangePassword")){
-			this.showChangePassword(request, response);	
-		}
+		}		
 		else if(action.equals("savePassword")){
 			this.savePassword(request, response);	
 		}
 		else if(action.equals("autocompleteUser")){
 			this.listUsersAutocomplete(request, response);
+		}
+		else if(action.equals("autocompleteMail")){
+			this.listMailsAutocomplete(request, response);
 		}
 		else{
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"index").forward(request, response);
@@ -102,7 +112,8 @@ public class UserController extends HttpServlet {
 	
 	private void showListUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Collection<Window> windows=new ArrayList<Window>();
-		windows.add(new Window("USR",400,180,"Usuario"));			
+		windows.add(new Window("USR",400,200,"Usuario"));
+		windows.add(new Window("USR_TMK",800,600,"Marcas de usuario"));
 		request.setAttribute("windows", windows);
 		
 		String userName=request.getParameter("f_user");
@@ -149,6 +160,18 @@ public class UserController extends HttpServlet {
 		request.setAttribute("id",id);
 		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formPassword").forward(request, response);
+	}
+	
+	private void showuserTrademarks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String id=request.getParameter("id");
+		request.setAttribute("id",id);
+		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		Collection<Trademark> trademarks=trademarkBusiness.listTrademarks();
+		
+		request.setAttribute("trademarks", trademarks);
+		
+		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUserTrademark").forward(request, response);
 	}
 	
 	private void saveUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -210,11 +233,27 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness(new UserDAOImpl()).listUsersAutocomplete("", "", "0", "1");
+		String json=new UserBusiness(new UserDAOImpl()).listUsersAutocomplete(userName, mail, type, state);
 		
-		//response.setCharacterEncoding("UTF-8");
-		//response.setContentType("application/json");
-		response.setContentType("text/html");
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().print(json);		
+	}
+	
+	private void listMailsAutocomplete(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String userName=request.getParameter("f_user");
+		request.setAttribute("f_user", userName);
+		String mail=request.getParameter("f_mail");
+		request.setAttribute("f_mail", mail);
+		String type=request.getParameter("f_type");
+		request.setAttribute("f_type", type);		
+		String state=request.getParameter("f_state");		
+		request.setAttribute("f_state", state);				
+		
+		String json=new UserBusiness(new UserDAOImpl()).listMailsAutocomplete(userName, mail, type, state);
+		
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(json);		
 	}
 	

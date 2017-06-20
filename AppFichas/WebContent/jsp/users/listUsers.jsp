@@ -46,7 +46,7 @@
 			<td><c:out value = "${user.mail}"/></td>
 			<td><c:out value = "${user.typeName}"/></td>
 			<td class="center">
-				<img title="Marcas Usuario" src="/AppFichas/resources/images/relation.png" class="img_button" onclick="ShowUserTrademarks('<c:out value = "${user.id}"/>')" />
+				<img title="Marcas Usuario" src="/AppFichas/resources/images/relation.png" class="img_button" onclick="ShowUserTrademarks('<c:out value = "${user.id}"/>','<c:out value ="${user.type}"/>')" />
 			</td>						
 			<td class="der">				
 				<img title="Editar Usuario" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateUser('<c:out value = "${user.id}"/>')" />

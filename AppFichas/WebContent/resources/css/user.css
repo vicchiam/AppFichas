@@ -3,3 +3,53 @@
 #users{
 	width:100%;	
 }
+
+.form #left{
+	width:43%;
+	height:90%;		
+	float:left;
+}
+
+.form #commands{
+	width:14%;
+	height:90%;	
+	float:left;
+	text-align:center;
+}
+
+.form button{
+	margin-top:100%;
+}
+
+.form #right{
+	width:43%;
+	height:90%;		
+	float:left;
+}
+
+.form .select_container{
+	margin:2%;
+	border:1px solid #000;
+	height:96%;
+	overflow:auto;
+}
+
+.form ul{
+	margin:2%;	
+}
+
+.form li{
+	margin:1px;
+	padding:5px;
+	cursor:pointer;
+}
+
+.form #left ul .selected{
+	background-color:#4CAF50;
+	color:#fff;
+}
+
+.form #right ul .selected{
+	background-color:#f44336;
+	color:#fff;
+}

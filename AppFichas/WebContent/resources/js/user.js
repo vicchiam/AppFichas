@@ -13,12 +13,11 @@ function Init(){
       icon: false
     });
 	
-	/*
 	$("#f_user").autocomplete({
 		source: function( request, response ) {
-			$.post( {
+			$.ajax( {
 				url: "/AppFichas/Users",
-				dataType: "jsonp",
+				dataType: "json",
 				data: {
 					"action":"autocompleteUser",
 					"f_user":$("#f_user").val(),
@@ -27,39 +26,54 @@ function Init(){
 					"f_state":(($("#f_state").is(':checked'))?0:1)
 				},
 				success: function(data) {
-					alert(data);
 					response(data);					
 				}
 	        });
 	      },
 	      minLength: 3,
 	      select: function( event, ui ) {
-	        alert(ui.item.value+" / "+ui.item.id);
+	        
 	      }
-	});
-	*/
+	});	
 	
-	var projects = [
-	                {
-	                  value: "jquery"	                  
-	                },
-	                {
-	                  value: "jquery-ui"	                  
-	                }
-	                ];
-	
-	$("#f_user").autocomplete({
-		source:"/AppFichas/Users?action=autocompleteUser",
-		//source:projects,
-		minLength: 2,
-	    select: function( event, ui ) {
-	    	 log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-	    }
-	});
+	$("#f_mail").autocomplete({
+		source: function( request, response ) {
+			$.ajax( {
+				url: "/AppFichas/Users",
+				dataType: "json",
+				data: {
+					"action":"autocompleteMail",
+					"f_user":$("#f_user").val(),
+					"f_mail":$("#f_mail").val(),
+					"f_type":$("#f_type").val(),
+					"f_state":(($("#f_state").is(':checked'))?0:1)
+				},
+				success: function(data) {
+					response(data);					
+				}
+	        });
+	      },
+	      minLength: 3,
+	      select: function( event, ui ) {
+	        
+	      }
+	});	
 }
 
-function InitForm(){
+function InitFormUser(){
 	$("#type").selectmenu();	
+}
+
+function InitFormUserTrademark(){
+	$(".select_container li").click(function (e) {
+		var li=e.target;
+		if($(li).hasClass("selected")){
+			$(li).removeClass("selected");
+		}
+		else{
+			$(li).addClass("selected");
+		}
+	});
 }
 
 function Search(){
@@ -118,6 +132,28 @@ function ShowChangePassword(id){
 	$.post(url,data,function(result){
 		$("#dynamic_USR").html(result);
 		OpenWindow("USR");
+	});		
+}
+
+function ShowUserTrademarks(id,type){
+	if(type==1){
+		alert("El tipo Administrador tiene acceso a todas las marcas");
+		return;
+	}
+	if(type==2){
+		alert("El tipo Usuario tiene acceso a todas las marcas");
+		return;
+	}	
+	
+	var url="/AppFichas/Users";	
+	var data={
+			"action":"showUserTrademarks",
+			"id":id
+	};
+		
+	$.post(url,data,function(result){
+		$("#dynamic_USR_TMK").html(result);
+		OpenWindow("USR_TMK");
 	});		
 }
 

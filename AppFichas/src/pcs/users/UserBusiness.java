@@ -68,6 +68,7 @@ public class UserBusiness {
 		return this.listUsersAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 	}	
 	
+	@SuppressWarnings("unchecked")
 	public String listUsersAutocomplete(String userName, String mail, int type, int state){
 		JSONArray root = new JSONArray();
 		
@@ -75,11 +76,22 @@ public class UserBusiness {
 		for(User user : listUsers){
 			root.add(user.getUser());
 		}		
-		System.out.println(root.toJSONString());
+		return root.toJSONString();		
+	}
+	
+	public String listMailsAutocomplete(String userName, String mail, String type, String state){
+		return this.listMailsAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String listMailsAutocomplete(String userName, String mail, int type, int state){
+		JSONArray root = new JSONArray();
 		
-		return root.toJSONString();
-		
-		//return "[{'value':'Ashok'},{'value':'Raimon'},{'value':'Radmana'}]";
+		Collection<User> listUsers=this.userDAO.listUsers(userName, mail, type, state);
+		for(User user : listUsers){
+			root.add(user.getMail());
+		}		
+		return root.toJSONString();		
 	}
 
 }

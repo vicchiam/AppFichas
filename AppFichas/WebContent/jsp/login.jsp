@@ -32,7 +32,7 @@
 					</tr>			
 					<tr>
 						<td>
-							<input type="submit" class="button" value="Iniciar Sessión" />
+							<input class="button_blue" type="submit" class="button" value="Iniciar Sessión" />
 						</td>
 					</tr>					
 				</table>				

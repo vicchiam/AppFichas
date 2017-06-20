@@ -17,6 +17,10 @@ public class TrademarkBusiness {
 		this.trademarkDAO=trademarkDAO;
 	}
 	
+	public Collection<Trademark> listTrademarks(){
+		return this.trademarkDAO.listTrademarks("");
+	}
+	
 	public Collection<Trademark> listTrademarks(String name){
 		return this.trademarkDAO.listTrademarks(name);
 	}
