@@ -11,7 +11,7 @@
 			<img style="max-width:200px;max-height:200px" src="/AppFichas<c:out value='${requestScope.path}'/>?<c:out value='${dateValue.time}'/>" />
 		</div>	
 		<div id="submit" class="center" style="display:none;max-height:140px;">
-			<input type="submit" class="button" value="Añadir" />
+			<input type="submit" class="button_green" value="Añadir" />
 		</div>			
 	</form>
 </div>

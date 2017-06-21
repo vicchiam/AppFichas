@@ -15,5 +15,9 @@ public interface TrademarkDAO {
 	public boolean deleteTrademark(int id);
 	
 	public boolean updateTrademarkPath(int id, String path);
+	
+	public Collection<Trademark> listTrademarksForUser(int idUser);
+	
+	public Collection<Trademark> listTrademarksForUserNot(int idUser);
 
 }

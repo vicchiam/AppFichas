@@ -31,9 +31,7 @@ function Init(){
 	        });
 	      },
 	      minLength: 3,
-	      select: function( event, ui ) {
-	        
-	      }
+	      select: function(event,ui){}
 	});	
 	
 	$("#f_mail").autocomplete({
@@ -54,9 +52,7 @@ function Init(){
 	        });
 	      },
 	      minLength: 3,
-	      select: function( event, ui ) {
-	        
-	      }
+	      select: function(event, ui){}
 	});	
 }
 
@@ -240,6 +236,50 @@ function SavePassword(){
 			alert(result);
 		}
 		CloseWindow("USR");
+	});	
+}
+
+function RemoveTrademark(){
+	var id=$("#_id").val();
+	var ids=new Array();
+	$("#right .selected").each(function(){
+		$("#left ul").append(this);
+		$(this).removeClass("selected");
+		$(this).find("input").each(function(){
+			ids[ids.length]=$(this).val();
+		});
+	});
+	var idsTrademark=ids.join("__");	
+	SendSelector(id,idsTrademark,"removeUserTrademarks");
+}
+
+function AddTrademark(){
+	var id=$("#_id").val();
+	var ids=new Array();
+	$("#left .selected").each(function(){
+		$("#right ul").append(this);
+		$(this).removeClass("selected");
+		$(this).find("input").each(function(){
+			ids[ids.length]=$(this).val();
+		});
+	});
+	var idsTrademark=ids.join("__");
+	SendSelector(id,idsTrademark,"addUserTrademarks");
+}
+
+function SendSelector(id,idsTrademark,action){
+	var url="/AppFichas/Users";	
+	var data={
+			"action":action,
+			"id":id,
+			"idsTrademarks":idsTrademark
+	};
+	
+	$.post(url,data,function(result){
+		if(result!="ok"){
+			alert(result);
+		}		
+		CloseWindow("USR_TMK");
 	});	
 }
 

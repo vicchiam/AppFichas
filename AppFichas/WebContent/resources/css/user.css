@@ -6,13 +6,13 @@
 
 .form #left{
 	width:43%;
-	height:90%;		
+	height:100%;		
 	float:left;
 }
 
 .form #commands{
 	width:14%;
-	height:90%;	
+	height:100%;	
 	float:left;
 	text-align:center;
 }
@@ -23,7 +23,7 @@
 
 .form #right{
 	width:43%;
-	height:90%;		
+	height:100%;		
 	float:left;
 }
 

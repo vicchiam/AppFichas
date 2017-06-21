@@ -2,6 +2,8 @@ package pcs.users;
 
 import java.util.Collection;
 
+import pcs.trademark.Trademark;
+
 public interface UserDAO {
 	
 	public User loginUser(String user, String password);
@@ -16,6 +18,6 @@ public interface UserDAO {
 	
 	public User updateUser(User user);
 	
-	public boolean changeStateUser(int id);
+	public boolean changeStateUser(int id);	
 
 }

@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.json.simple.JSONArray;
 
+import pcs.trademark.Trademark;
+
 
 public class UserBusiness {
 	
@@ -92,6 +94,6 @@ public class UserBusiness {
 			root.add(user.getMail());
 		}		
 		return root.toJSONString();		
-	}
+	}	
 
 }

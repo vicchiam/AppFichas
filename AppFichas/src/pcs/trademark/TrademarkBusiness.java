@@ -96,5 +96,21 @@ public class TrademarkBusiness {
 	}
 	
 	
+	public Collection<Trademark> listUserTrademarks(String idUser){
+		return this.listUserTrademarks(Integer.parseInt(idUser));
+	}
+	
+	public Collection<Trademark> listUserTrademarks(int idUser){
+		return this.trademarkDAO.listTrademarksForUser(idUser);
+	}
+	
+	public Collection<Trademark> listUserTrademarksNot(String idUser){
+		return this.listUserTrademarksNot(Integer.parseInt(idUser));
+	}
+	
+	public Collection<Trademark> listUserTrademarksNot(int idUser){
+		return this.trademarkDAO.listTrademarksForUserNot(idUser);
+	}
+	
 
 }

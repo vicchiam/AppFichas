@@ -104,6 +104,12 @@ public class UserController extends HttpServlet {
 		else if(action.equals("autocompleteMail")){
 			this.listMailsAutocomplete(request, response);
 		}
+		else if(action.equals("addUserTrademarks")){
+			this.addUserTrademarks(request, response);
+		}
+		else if(action.equals("removeUserTrademarks")){
+			this.removeUserTrademarks(request, response);
+		}
 		else{
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"index").forward(request, response);
 		}	
@@ -167,9 +173,11 @@ public class UserController extends HttpServlet {
 		request.setAttribute("id",id);
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Collection<Trademark> trademarks=trademarkBusiness.listTrademarks();
+		Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(id);
+		Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(id);
 		
 		request.setAttribute("trademarks", trademarks);
+		request.setAttribute("userTrademarks", userTrademarks);		
 		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUserTrademark").forward(request, response);
 	}
@@ -250,11 +258,25 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness(new UserDAOImpl()).listMailsAutocomplete(userName, mail, type, state);
+		String json=new UserBusiness(new UserDAOImpl()).listMailsAutocomplete(userName, mail, type, state);		
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(json);		
+	}
+	
+	private void addUserTrademarks(HttpServletRequest request, HttpServletResponse response){
+		String id=request.getParameter("id");
+		String idsTrademarks=request.getParameter("idsTrademarks");
+		
+		
+	}
+	
+	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response){
+		String id=request.getParameter("id");
+		String idsTrademarks=request.getParameter("idsTrademarks");
+				
+		
 	}
 	
 }

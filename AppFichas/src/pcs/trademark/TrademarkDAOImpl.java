@@ -20,6 +20,8 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	private String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
 	private String DELETE_SQL="DELETE FROM trademark WHERE id=?";
 	private String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
+	private String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE ut.id_user=?";
+	private String SELECT_USER_TRADEMARK_SQL_NOT="SELECT t.id, t.name, t.path FROM trademark t WHERE t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?)";
 	
 	public TrademarkDAOImpl() {}
 
@@ -166,6 +168,40 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		return false;
 	}
 	
+	@Override
+	public Collection<Trademark> listTrademarksForUser(int idUser) {		
+		return this.listTrademarksUser(idUser, SELECT_USER_TRADEMARK_SQL);
+	}
+	
+	@Override
+	public Collection<Trademark> listTrademarksForUserNot(int idUser) {
+		return this.listTrademarksUser(idUser, SELECT_USER_TRADEMARK_SQL_NOT);
+	}
+	
+	private Collection<Trademark> listTrademarksUser(int idUser, String SQL){		
+		Collection<Trademark> listTrademarks=new ArrayList<>();
+		try {
+			Connection conn=JDBCUtil.getConnection();
+			PreparedStatement ps=conn.prepareStatement(SQL);
+			ps.setInt(1, idUser);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				listTrademarks.add(Trademark.makeTrademark(rs));
+			}				
+			rs.close();
+			ps.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			JDBCUtil.closeConnection();
+			e.printStackTrace();
+		}		
+		return listTrademarks;
+	}
+	
 	private PreparedStatement prepareParams(Connection conn, String name) throws SQLException{
 		String sql=SELECT_SQL;
 		List<String> where=new ArrayList<>();
@@ -182,6 +218,8 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		
 		return JDBCUtil.getPreparedStatement(conn, sql , params);			
 	}
+
+	
 
 		
 

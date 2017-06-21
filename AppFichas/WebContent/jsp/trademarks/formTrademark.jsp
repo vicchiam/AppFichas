@@ -12,7 +12,7 @@
 		</tr>		
 		<tr>
 			<td colspan="2" class="center">
-				<input type="button" class="button" value="Guardar" onclick="SaveTrademark()" />
+				<input type="button" class="button_green" value="Guardar" onclick="SaveTrademark()" />
 			</td>
 		</tr>
 	</table>

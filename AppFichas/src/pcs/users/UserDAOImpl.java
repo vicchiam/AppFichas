@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO{
 	private String INSERT_SQL="INSERT INTO user (user,password,mail,type) VALUES(?,md5('user'),?,?);";
 	private String UPDATE_SQL="UPDATE user SET user=?, mail=?, type=? WHERE id=?";
 	private String UPDATE_STATE_SQL="UPDATE user SET state=if(state=0,1,0) WHERE id=?";
-	private String UPDATE_PASSWORD_SQL="UPDATE user SET password=md5(?) WHERE id=?";
+	private String UPDATE_PASSWORD_SQL="UPDATE user SET password=md5(?) WHERE id=?";	
     
     public UserDAOImpl(){}
 
@@ -225,6 +225,6 @@ public class UserDAOImpl implements UserDAO{
 		sql+=" ORDER BY user";
 		
 		return JDBCUtil.getPreparedStatement(conn, sql , params);			
-	}	
+	}
 
 }
