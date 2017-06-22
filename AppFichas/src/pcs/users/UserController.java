@@ -15,14 +15,12 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import pcs.main.Params;
-import pcs.main.Window;
-import pcs.test.Test;
 import pcs.trademark.Trademark;
 import pcs.trademark.TrademarkBusiness;
-import pcs.trademark.TrademarkDAO;
 import pcs.trademark.TrademarkDAOImpl;
+import pcs.utils.Params;
 import pcs.utils.ServletUtils;
+import pcs.utils.Window;
 
 /**
  * Servlet implementation class UsersServlet
@@ -133,8 +131,8 @@ public class UserController extends HttpServlet {
 		if(state==null) state="1";
 		request.setAttribute("f_state", state);		
 		
-		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
-		Collection<User> listUsers=userBusiness.listUsers(userName, mail, type, state);
+		UserBusiness userBusiness=new UserBusiness();
+		Collection<User> listUsers=userBusiness.listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 		
 		//Collection<User> listUsers=Test.getUsers();
 		request.setAttribute("listUsers", listUsers);
@@ -154,8 +152,8 @@ public class UserController extends HttpServlet {
 	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		
-		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
-		User user=userBusiness.getUser(id);
+		UserBusiness userBusiness=new UserBusiness();
+		User user=userBusiness.getUser(Integer.parseInt(id));
 		request.setAttribute("user",user);
 		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
@@ -173,8 +171,8 @@ public class UserController extends HttpServlet {
 		request.setAttribute("id",id);
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(id);
-		Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(id);
+		Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(Integer.parseInt(id));
+		Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(Integer.parseInt(id));
 		
 		request.setAttribute("trademarks", trademarks);
 		request.setAttribute("userTrademarks", userTrademarks);		
@@ -188,8 +186,8 @@ public class UserController extends HttpServlet {
 		String mail=request.getParameter("mail");
 		String type=request.getParameter("type");
 		
-		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());	
-		User user=userBusiness.saveUser(id, userName, mail, type);
+		UserBusiness userBusiness=new UserBusiness();	
+		User user=userBusiness.saveUser(Integer.parseInt(id), userName, mail, Integer.parseInt(type));
 		
 		response.setContentType("text/html");
 		if(user!=null){
@@ -204,10 +202,10 @@ public class UserController extends HttpServlet {
 	private void changeStateUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String id=request.getParameter("id");
 		
-		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
+		UserBusiness userBusiness=new UserBusiness();
 		
 		response.setContentType("text/html");
-		if(userBusiness.changeStateUser(id)){
+		if(userBusiness.changeStateUser(Integer.parseInt(id))){
 			response.getWriter().print("ok");
 		}
 		else{
@@ -219,10 +217,10 @@ public class UserController extends HttpServlet {
 		String id=request.getParameter("id");
 		String password=request.getParameter("password");
 		
-		UserBusiness userBusiness=new UserBusiness(new UserDAOImpl());
+		UserBusiness userBusiness=new UserBusiness();
 		
 		response.setContentType("text/html");
-		if(userBusiness.savePassword(id, password)){
+		if(userBusiness.savePassword(Integer.parseInt(id), password)){
 			response.getWriter().print("ok");
 		}
 		else{
@@ -241,7 +239,7 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness(new UserDAOImpl()).listUsersAutocomplete(userName, mail, type, state);
+		String json=new UserBusiness().listUsersAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
@@ -258,25 +256,40 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness(new UserDAOImpl()).listMailsAutocomplete(userName, mail, type, state);		
+		String json=new UserBusiness().listMailsAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));		
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(json);		
 	}
 	
-	private void addUserTrademarks(HttpServletRequest request, HttpServletResponse response){
-		String id=request.getParameter("id");
+	private void addUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String idUser=request.getParameter("id");
 		String idsTrademarks=request.getParameter("idsTrademarks");
 		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		
+		for(String idTrademark : idsTrademarks.split("__")){
+			if(!trademarkBusiness.addUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
+				response.getWriter().print("Error add User-Trademark");	
+			}
+		}
+		response.getWriter().print("ok");
 		
 	}
 	
-	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response){
-		String id=request.getParameter("id");
+	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String idUser=request.getParameter("id");
 		String idsTrademarks=request.getParameter("idsTrademarks");
-				
 		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		
+		for(String idTrademark : idsTrademarks.split("__")){
+			if(!trademarkBusiness.removeUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
+				response.getWriter().print("Error remove User-Trademark");	
+			}
+		}
+		response.getWriter().print("ok");	
 	}
 	
 }

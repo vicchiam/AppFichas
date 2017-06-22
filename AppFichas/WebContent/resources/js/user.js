@@ -279,7 +279,6 @@ function SendSelector(id,idsTrademark,action){
 		if(result!="ok"){
 			alert(result);
 		}		
-		CloseWindow("USR_TMK");
 	});	
 }
 

@@ -2,16 +2,16 @@ package pcs.users;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import pcs.utils.DAO;
 import pcs.utils.JDBCUtil;
 
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl extends DAO<User> implements UserDAO{
 	
 	private String LOGIN_SQL="SELECT id, user, mail, type, state FROM user WHERE user= ? and password=md5(?) and state=1";
 	private String SELECT_SQL="SELECT id, user, mail, type, state FROM user";
@@ -23,82 +23,49 @@ public class UserDAOImpl implements UserDAO{
     
     public UserDAOImpl(){}
 
-	@Override
+    @Override
 	public User loginUser(String userName, String password) {
-		User user=new User();
-		try{
-			Connection conn=JDBCUtil.getConnection();
-			List<Object> params=new ArrayList<>();
-			params.add(userName);
-			params.add(password);	
-			PreparedStatement ps=JDBCUtil.getPreparedStatement(conn, LOGIN_SQL , params);			
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				user=User.makeUser(rs);
-			}			
-			rs.close();
-			ps.close();
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();			
-		}
-		return user;
-	}
-	
-	@Override
-	public Collection<User> listUsers(String userName, String mail, int type, int state) {
+    	User user=new User();
+    	try{
+	    	Connection conn=JDBCUtil.getConnection();
+			PreparedStatement ps=conn.prepareStatement(LOGIN_SQL);
+			ps.setString(1, userName);
+			ps.setString(2, password);
+			user=super.get(ps, user);
+    	} catch (SQLException e) {    		
+    		e.printStackTrace();
+    	}
+    	return user;
+    }
+    
+    @Override
+	public Collection<User> listUsers(String userName, String mail, int type, int state) {		
 		Collection<User> listUsers=new ArrayList<>();
 		try {
 			Connection conn=JDBCUtil.getConnection();
-			PreparedStatement ps=this.prepareParams(conn, userName, mail, type, state);				
-			ResultSet rs=ps.executeQuery();
-			while(rs.next()){
-				listUsers.add(User.makeUser(rs));
-			}				
-			rs.close();
-			ps.close();
-			
+			PreparedStatement ps = this.prepareParams(conn, userName, mail, type, state);
+			listUsers=super.list(ps, new User());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}		
 		return listUsers;
 	}
 	
-	@Override
 	public User getUser(int id) {
 		User user=new User();
 		try {
 			Connection conn=JDBCUtil.getConnection();
-			List<Object> params=new ArrayList<>();
-			params.add(id);				
-			PreparedStatement ps=JDBCUtil.getPreparedStatement(conn, SELECT_ID_SQL , params);				
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				user=User.makeUser(rs);
-			}				
-			rs.close();
-			ps.close();
-			
+			PreparedStatement ps=conn.prepareStatement(SELECT_ID_SQL);
+			ps.setInt(1, id);
+			user=super.get(ps, user);			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}		
 		return user;
 	}
-
+	
 	@Override
 	public boolean changePassword(int id, String password) {
 		try {
@@ -106,19 +73,10 @@ public class UserDAOImpl implements UserDAO{
 			PreparedStatement ps=conn.prepareStatement(UPDATE_PASSWORD_SQL);
 			ps.setString(1, password);
 			ps.setInt(2, id);
-			int res=ps.executeUpdate();			
-			ps.close();
-			if(res>0){
-				return true;
-			}
-			
+			return super.change(ps);			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return false;
 	}
 	
@@ -130,25 +88,13 @@ public class UserDAOImpl implements UserDAO{
 			ps.setString(1, user.getUser());
 			ps.setString(2, user.getMail());
 			ps.setInt(3, user.getType());			
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next())
-            {
-            	int last_inserted_id = rs.getInt(1);
-            	user.setId(last_inserted_id);
-            }
-            rs.close();
-			ps.close();
-            return user;
-			
+			int id=super.insert(ps);
+			user.setId(id);
+            return user;			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return null;
 	}		
 
@@ -161,8 +107,7 @@ public class UserDAOImpl implements UserDAO{
 			ps.setString(2, user.getMail());
 			ps.setInt(3, user.getType());
 			ps.setInt(4, user.getId());
-			int res=ps.executeUpdate();			
-			ps.close();
+			int res=super.update(ps);
 			if(res>0){
 				return user;
 			}
@@ -183,19 +128,11 @@ public class UserDAOImpl implements UserDAO{
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(UPDATE_STATE_SQL);
 			ps.setInt(1, id);
-			int res=ps.executeUpdate();			
-			ps.close();
-			if(res>0){
-				return true;
-			}
+			return super.change(ps);	
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return false;
 	}	
 	
@@ -226,5 +163,9 @@ public class UserDAOImpl implements UserDAO{
 		
 		return JDBCUtil.getPreparedStatement(conn, sql , params);			
 	}
+
+	
+
+	
 
 }

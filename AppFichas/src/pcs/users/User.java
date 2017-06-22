@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class User implements Serializable{
+import pcs.utils.AutoMake;
+
+public class User implements AutoMake<User>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -111,6 +113,16 @@ public class User implements Serializable{
 	
 	public String getStateName(){
 		return User.stateNames[this.state];
+	}
+
+	@Override
+	public User autoMake(ResultSet rs) throws SQLException {
+		int id=rs.getInt("id");
+		String user=rs.getString("user");
+		String mail=rs.getString("mail");
+		int type=rs.getInt("type");
+		int state=rs.getInt("state");
+		return new User(id,user,mail,type,state);	
 	}
 	
 }

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
 
-import pcs.main.Params;
 import pcs.utils.FileUtils;
+import pcs.utils.Params;
 
 public class TrademarkBusiness {
 	
@@ -25,16 +25,8 @@ public class TrademarkBusiness {
 		return this.trademarkDAO.listTrademarks(name);
 	}
 	
-	public Trademark getTrademark(String id){
-		return this.getTrademark(Integer.parseInt(id));
-	}
-	
 	public Trademark getTrademark(int id){
 		return this.trademarkDAO.getTrademark(id);
-	}
-	
-	public Trademark saveTrademark(String id, String name){
-		return this.saveTrademark(Integer.parseInt(id), name);
 	}
 	
 	public Trademark saveTrademark(int id, String name){
@@ -48,10 +40,6 @@ public class TrademarkBusiness {
 		}
 		
 		return trademark;		
-	}
-	
-	public boolean deleteTrademark(String id){
-		return this.deleteTrademark(Integer.parseInt(id));
 	}
 	
 	public boolean deleteTrademark(int id){
@@ -96,21 +84,22 @@ public class TrademarkBusiness {
 	}
 	
 	
-	public Collection<Trademark> listUserTrademarks(String idUser){
-		return this.listUserTrademarks(Integer.parseInt(idUser));
-	}
-	
 	public Collection<Trademark> listUserTrademarks(int idUser){
 		return this.trademarkDAO.listTrademarksForUser(idUser);
-	}
-	
-	public Collection<Trademark> listUserTrademarksNot(String idUser){
-		return this.listUserTrademarksNot(Integer.parseInt(idUser));
 	}
 	
 	public Collection<Trademark> listUserTrademarksNot(int idUser){
 		return this.trademarkDAO.listTrademarksForUserNot(idUser);
 	}
+	
+	public boolean addUserTrademark(int idUser, int idTrademark){
+		return this.trademarkDAO.addUserTrademark(idUser, idTrademark);
+	}
+	
+	public boolean removeUserTrademark(int idUser, int idTrademark){
+		return this.trademarkDAO.removeUserTrademark(idUser, idTrademark);
+	}
+	
 	
 
 }

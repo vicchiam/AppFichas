@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.main.Params;
+import pcs.utils.AutoMake;
+import pcs.utils.Params;
 
-public class Trademark implements Serializable{
+public class Trademark implements AutoMake<Trademark>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -63,6 +64,14 @@ public class Trademark implements Serializable{
 	}
 
 	public static Trademark makeTrademark(ResultSet rs) throws SQLException{
+		int id=rs.getInt("id");
+		String name=rs.getString("name");
+		String path=rs.getString("path");
+		return new Trademark(id,name,path);
+	}
+
+	@Override
+	public Trademark autoMake(ResultSet rs) throws SQLException {
 		int id=rs.getInt("id");
 		String name=rs.getString("name");
 		String path=rs.getString("path");

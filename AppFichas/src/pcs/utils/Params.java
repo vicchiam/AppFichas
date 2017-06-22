@@ -1,4 +1,4 @@
-package pcs.main;
+package pcs.utils;
 
 public class Params {
 	

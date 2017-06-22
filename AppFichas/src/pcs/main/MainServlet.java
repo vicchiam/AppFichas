@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pcs.users.User;
-import pcs.users.UserDAO;
-import pcs.users.UserDAOImpl;
+import pcs.users.UserBusiness;
 import pcs.utils.ServletUtils;
 
 /**
@@ -20,21 +19,16 @@ import pcs.utils.ServletUtils;
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private String pathJSP;
-       
-    /**
+	/**
      * @see HttpServlet#HttpServlet()
      */
     public MainServlet() {
-        super();
-        // TODO Auto-generated constructor stub
+        super();       
     }
     
     @Override
 	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		
-		pathJSP=config.getInitParameter("pathJSP");				
+		super.init(config);				
 	}
 
 	/**
@@ -64,12 +58,12 @@ public class MainServlet extends HttpServlet {
 		if(action.equals("startSession")){			
 			
 			String userName=request.getParameter("user");
-			String password=request.getParameter("password");
+			String password=request.getParameter("password");			
 			
-			UserDAO userDAO = new UserDAOImpl();
-			User user=userDAO.loginUser(userName, password);
+			UserBusiness userBusiness=new UserBusiness();
+			User user=userBusiness.login(userName, password);
 			
-			if(user.getId()!=0){
+			if(user!=null && user.getId()!=0){
 				HttpSession session=request.getSession();
 				session.setAttribute("user", user);
 				ServletUtils.setResponseController(this, "/jsp/index").forward(request, response);

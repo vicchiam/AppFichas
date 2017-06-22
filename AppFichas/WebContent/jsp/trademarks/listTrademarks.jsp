@@ -23,7 +23,7 @@
 				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateTrademark('<c:out value = "${trademark.id}"/>')" />
 				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/delete.png" class="img_button" onclick="DeleteTrademark('<c:out value = "${trademark.id}"/>')" />
 			</td>
-         	</tr>
+         </tr>
       	</c:forEach>
 	</table>
 	<div class="script">

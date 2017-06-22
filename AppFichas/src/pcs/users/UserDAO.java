@@ -2,8 +2,6 @@ package pcs.users;
 
 import java.util.Collection;
 
-import pcs.trademark.Trademark;
-
 public interface UserDAO {
 	
 	public User loginUser(String user, String password);

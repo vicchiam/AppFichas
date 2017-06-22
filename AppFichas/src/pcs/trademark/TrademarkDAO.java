@@ -19,5 +19,11 @@ public interface TrademarkDAO {
 	public Collection<Trademark> listTrademarksForUser(int idUser);
 	
 	public Collection<Trademark> listTrademarksForUserNot(int idUser);
+	
+	public boolean addUserTrademark(int idUser, int idTrademark);
+	
+	public boolean removeUserTrademark(int idUser, int idTrademark);
+	
+	
 
 }

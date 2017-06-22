@@ -12,21 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 
-import pcs.main.Window;
-import pcs.main.Params;
-import pcs.test.Test;
-import pcs.users.User;
-import pcs.utils.FileUtils;
+import pcs.utils.Params;
 import pcs.utils.ServletUtils;
+import pcs.utils.Window;
 
 /**
  * Servlet implementation class TrademarkController
@@ -126,7 +121,7 @@ public class TrademarkController extends HttpServlet {
 		String name=request.getParameter("name");
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Trademark trademark=trademarkBusiness.saveTrademark(id, name);
+		Trademark trademark=trademarkBusiness.saveTrademark(Integer.parseInt(id), name);
 		
 		response.setContentType("text/html");
 		if(trademark!=null){
@@ -142,7 +137,7 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Trademark trademarkDeleted=trademarkBusiness.getTrademark(id);
+		Trademark trademarkDeleted=trademarkBusiness.getTrademark(Integer.parseInt(id));
 				
 		response.setContentType("text/html");
 		if(trademarkBusiness.deleteTrademark(Integer.parseInt(id))){

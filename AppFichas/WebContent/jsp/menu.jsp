@@ -13,6 +13,7 @@
 					<li><a class="level2" href="#">Envase</a></li>
 					<li><a class="level2" href="#">Embalaje</a></li>
 					<li><a class="level2" href="#">Químicos</a></li>
+					<li><a class="level2" href="/AppFichas/WeightUnits?action=list">Unidades Peso</a></li>
 				</ul>
 			</li>
 			</c:if>

@@ -34,6 +34,26 @@
     <servlet-name>TrademarkController</servlet-name>
     <url-pattern>/Trademarks</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>PackController</display-name>
+    <servlet-name>PackController</servlet-name>
+    <servlet-class>pcs.pack.PackController</servlet-class>
+  </servlet>  
+  <servlet-mapping>
+    <servlet-name>PackController</servlet-name>
+    <url-pattern>/Packs</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>WeightUnitController</display-name>
+    <servlet-name>WeightUnitController</servlet-name>
+    <servlet-class>pcs.weightUnit.WeightUnitController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WeightUnitController</servlet-name>
+    <url-pattern>/WeightUnits</url-pattern>
+  </servlet-mapping>
   <resource-ref>
     <description>DB Connection</description>
     <res-ref-name>jdbc/AppFichasDB</res-ref-name>
