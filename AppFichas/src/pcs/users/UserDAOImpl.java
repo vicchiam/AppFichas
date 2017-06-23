@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import pcs.utils.DAO;
+import pcs.abstracts.DAO;
+import pcs.interfacesDAO.UserDAO;
 import pcs.utils.JDBCUtil;
 
 public class UserDAOImpl extends DAO<User> implements UserDAO{
@@ -35,7 +36,7 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
     	} catch (SQLException e) {    		
     		e.printStackTrace();
     	}
-    	return user;
+    	return null;
     }
     
     @Override
@@ -46,7 +47,6 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
 			PreparedStatement ps = this.prepareParams(conn, userName, mail, type, state);
 			listUsers=super.list(ps, new User());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listUsers;
@@ -60,10 +60,9 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
 			ps.setInt(1, id);
 			user=super.get(ps, user);			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return user;
+		return null;
 	}
 	
 	@Override
@@ -73,7 +72,7 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
 			PreparedStatement ps=conn.prepareStatement(UPDATE_PASSWORD_SQL);
 			ps.setString(1, password);
 			ps.setInt(2, id);
-			return super.change(ps);			
+			return super.operation(ps);			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -92,7 +91,6 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
 			user.setId(id);
             return user;			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 		return null;
@@ -128,7 +126,7 @@ public class UserDAOImpl extends DAO<User> implements UserDAO{
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(UPDATE_STATE_SQL);
 			ps.setInt(1, id);
-			return super.change(ps);	
+			return super.operation(ps);	
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

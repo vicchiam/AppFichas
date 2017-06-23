@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import pcs.interfaces.AutoMake;
+import pcs.interfacesDAO.WeightDAO;
 import pcs.weight.Weight;
-import pcs.weight.WeightDAO;
 import pcs.weight.WeightDAOImpl;
 
-public class Pack implements Serializable{
+public class Pack implements AutoMake<Pack>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,6 +21,17 @@ public class Pack implements Serializable{
 	private Weight weight;
 	private int apt;
 	private int state;
+	
+	public Pack() {
+		this.id = 0;
+		this.description = "";
+		this.width = 0;
+		this.height = 0;
+		this.depth = 0;
+		this.weight = null;
+		this.apt = 0;
+		this.state = 0;
+	}
 	
 	public Pack(int id, String description, int width, int height, int depth, Weight weight, int apt, int state) {
 		this.id = id;
@@ -44,7 +56,7 @@ public class Pack implements Serializable{
 		this.weight = weightDAO.getWeight(idWeight);
 		this.apt = apt;
 		this.state=state;
-	}
+	}	
 
 	public int getId() {
 		return id;
@@ -110,7 +122,9 @@ public class Pack implements Serializable{
 		this.state = state;
 	}
 
-	public static Pack makePack(ResultSet rs) throws SQLException{
+	@Override
+	public Pack autoMake(ResultSet rs) throws SQLException {
+		
 		int id=rs.getInt("id");
 		String description=rs.getString("description");
 		int width=rs.getInt("width");
@@ -120,7 +134,7 @@ public class Pack implements Serializable{
 		int state=rs.getInt("state");
 		int id_weight=rs.getInt("id_weight");		
 		
-		return new Pack(id, description, width, height, depth, id_weight, apt, state);		
+		return new Pack(id, description, width, height, depth, id_weight, apt, state);
 	}
 	
 	

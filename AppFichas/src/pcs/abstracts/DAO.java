@@ -1,10 +1,12 @@
-package pcs.utils;
+package pcs.abstracts;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import pcs.interfaces.AutoMake;
 
 public abstract class DAO<T> {
 
@@ -18,7 +20,6 @@ public abstract class DAO<T> {
 		ps.close();				
 		return list;
 	}
-	
 	
 	public T get(PreparedStatement ps, AutoMake<T> autoMake) throws SQLException{
 		T result=null;		
@@ -49,7 +50,7 @@ public abstract class DAO<T> {
 		return res;
 	}
 	
-	public boolean change(PreparedStatement ps) throws SQLException{
+	public boolean operation(PreparedStatement ps) throws SQLException{
 		int res=ps.executeUpdate();			
 		ps.close();
 		if(res>0){

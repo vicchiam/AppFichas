@@ -85,7 +85,7 @@ public class UserController extends HttpServlet {
 			this.showChangePassword(request, response);	
 		}
 		else if(action.equals("showUserTrademarks")){
-			this.showuserTrademarks(request, response);	
+			this.showUserTrademarks(request, response);	
 		}
 		else if(action.equals("saveUser")){
 			this.saveUser(request, response);	
@@ -97,10 +97,10 @@ public class UserController extends HttpServlet {
 			this.savePassword(request, response);	
 		}
 		else if(action.equals("autocompleteUser")){
-			this.listUsersAutocomplete(request, response);
+			this.autocompleteUser(request, response);
 		}
 		else if(action.equals("autocompleteMail")){
-			this.listMailsAutocomplete(request, response);
+			this.autocompleteMail(request, response);
 		}
 		else if(action.equals("addUserTrademarks")){
 			this.addUserTrademarks(request, response);
@@ -134,7 +134,6 @@ public class UserController extends HttpServlet {
 		UserBusiness userBusiness=new UserBusiness();
 		Collection<User> listUsers=userBusiness.listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 		
-		//Collection<User> listUsers=Test.getUsers();
 		request.setAttribute("listUsers", listUsers);
 		if(request.getParameter("ajax")==null){
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/user").forward(request, response);
@@ -166,11 +165,11 @@ public class UserController extends HttpServlet {
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formPassword").forward(request, response);
 	}
 	
-	private void showuserTrademarks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void showUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		request.setAttribute("id",id);
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 		Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(Integer.parseInt(id));
 		Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(Integer.parseInt(id));
 		
@@ -225,11 +224,10 @@ public class UserController extends HttpServlet {
 		}
 		else{
 			response.getWriter().print("error");
-		}
-		
+		}		
 	}
 	
-	private void listUsersAutocomplete(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void autocompleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String userName=request.getParameter("f_user");
 		request.setAttribute("f_user", userName);
 		String mail=request.getParameter("f_mail");
@@ -239,14 +237,14 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness().listUsersAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
+		String json=new UserBusiness().autocompleteUser(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		response.getWriter().print(json);		
 	}
 	
-	private void listMailsAutocomplete(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void autocompleteMail(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String userName=request.getParameter("f_user");
 		request.setAttribute("f_user", userName);
 		String mail=request.getParameter("f_mail");
@@ -256,7 +254,7 @@ public class UserController extends HttpServlet {
 		String state=request.getParameter("f_state");		
 		request.setAttribute("f_state", state);				
 		
-		String json=new UserBusiness().listMailsAutocomplete(userName, mail, Integer.parseInt(type), Integer.parseInt(state));		
+		String json=new UserBusiness().autocompleteMail(userName, mail, Integer.parseInt(type), Integer.parseInt(state));		
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
@@ -267,22 +265,21 @@ public class UserController extends HttpServlet {
 		String idUser=request.getParameter("id");
 		String idsTrademarks=request.getParameter("idsTrademarks");
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 		
 		for(String idTrademark : idsTrademarks.split("__")){
 			if(!trademarkBusiness.addUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
 				response.getWriter().print("Error add User-Trademark");	
 			}
 		}
-		response.getWriter().print("ok");
-		
+		response.getWriter().print("ok");		
 	}
 	
 	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String idUser=request.getParameter("id");
 		String idsTrademarks=request.getParameter("idsTrademarks");
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 		
 		for(String idTrademark : idsTrademarks.split("__")){
 			if(!trademarkBusiness.removeUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){

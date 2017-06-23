@@ -2,6 +2,8 @@ package pcs.weightUnit;
 
 import java.util.Collection;
 
+import pcs.interfacesDAO.WeightUnitDAO;
+
 public class WeightUnitBusiness {
 	
 	private WeightUnitDAO weightUnitDAO;

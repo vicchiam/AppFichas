@@ -1,4 +1,6 @@
-package pcs.weight;
+package pcs.interfacesDAO;
+
+import pcs.weight.Weight;
 
 public interface WeightDAO {
 

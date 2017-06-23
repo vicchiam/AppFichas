@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.utils.AutoMake;
+import pcs.interfaces.AutoMake;
 
 public class WeightUnit implements AutoMake<WeightUnit>, Serializable{
 
@@ -66,14 +66,6 @@ public class WeightUnit implements AutoMake<WeightUnit>, Serializable{
 
 	public void setState(int state) {
 		this.state = state;
-	}
-
-	public static WeightUnit makeWeightUnit(ResultSet rs) throws SQLException{
-		int id=rs.getInt("id");
-		String name=rs.getString("name");
-		float conversionToKgm=rs.getFloat("conversionToKgm");
-		int state=rs.getInt("state");
-		return new WeightUnit(id,name,conversionToKgm,state);
 	}
 
 	@Override

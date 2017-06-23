@@ -5,7 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.json.simple.JSONArray;
 
+import pcs.interfacesDAO.TrademarkDAO;
+import pcs.users.User;
 import pcs.utils.FileUtils;
 import pcs.utils.Params;
 
@@ -13,16 +16,16 @@ public class TrademarkBusiness {
 	
 	private TrademarkDAO trademarkDAO;
 	
-	public TrademarkBusiness(TrademarkDAO trademarkDAO){
-		this.trademarkDAO=trademarkDAO;
+	public TrademarkBusiness(){
+		this.trademarkDAO=new TrademarkDAOImpl();
 	}
 	
 	public Collection<Trademark> listTrademarks(){
-		return this.trademarkDAO.listTrademarks("");
+		return this.trademarkDAO.listTrademarks("",1);
 	}
 	
-	public Collection<Trademark> listTrademarks(String name){
-		return this.trademarkDAO.listTrademarks(name);
+	public Collection<Trademark> listTrademarks(String name, int state){
+		return this.trademarkDAO.listTrademarks(name, state);
 	}
 	
 	public Trademark getTrademark(int id){
@@ -42,8 +45,35 @@ public class TrademarkBusiness {
 		return trademark;		
 	}
 	
-	public boolean deleteTrademark(int id){
-		return this.trademarkDAO.deleteTrademark(id);
+	public boolean changeStateTrademark(int id){
+		return this.trademarkDAO.changeStateTrademark(id);
+	}
+	
+	public Collection<Trademark> listUserTrademarks(int idUser){
+		return this.trademarkDAO.listTrademarksForUser(idUser);
+	}
+	
+	public Collection<Trademark> listUserTrademarksNot(int idUser){
+		return this.trademarkDAO.listTrademarksForUserNot(idUser);
+	}
+	
+	public boolean addUserTrademark(int idUser, int idTrademark){
+		return this.trademarkDAO.addUserTrademark(idUser, idTrademark);
+	}
+	
+	public boolean removeUserTrademark(int idUser, int idTrademark){
+		return this.trademarkDAO.removeUserTrademark(idUser, idTrademark);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String autocompleteName(String name, int state){
+		JSONArray root = new JSONArray();
+		
+		Collection<Trademark> listTrademarks=this.trademarkDAO.listTrademarks(name, state);
+		for(Trademark trademark : listTrademarks){
+			root.add(trademark.getName());
+		}		
+		return root.toJSONString();		
 	}
 	
 	public String uploadFile(List<FileItem> multiparts, String DIRECTORY) throws Exception{
@@ -81,25 +111,16 @@ public class TrademarkBusiness {
     	else{
     		return "File Name Error";
     	}
+	}	
+	
+	public boolean deleteFile(String DIRECTORY, int id){
+		String path=this.getTrademark(id).getPath();
+		String realPath=DIRECTORY+path;
+		File f=new File(realPath);
+		if(f.delete()){
+			return trademarkDAO.updateTrademarkPath(id, "");			
+		}
+		return false;
 	}
-	
-	
-	public Collection<Trademark> listUserTrademarks(int idUser){
-		return this.trademarkDAO.listTrademarksForUser(idUser);
-	}
-	
-	public Collection<Trademark> listUserTrademarksNot(int idUser){
-		return this.trademarkDAO.listTrademarksForUserNot(idUser);
-	}
-	
-	public boolean addUserTrademark(int idUser, int idTrademark){
-		return this.trademarkDAO.addUserTrademark(idUser, idTrademark);
-	}
-	
-	public boolean removeUserTrademark(int idUser, int idTrademark){
-		return this.trademarkDAO.removeUserTrademark(idUser, idTrademark);
-	}
-	
-	
 
 }

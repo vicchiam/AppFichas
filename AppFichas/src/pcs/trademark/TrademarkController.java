@@ -1,6 +1,5 @@
 package pcs.trademark;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -68,14 +67,20 @@ public class TrademarkController extends HttpServlet {
 		else if(action.equals("saveTrademark")){
 			this.saveTrademark(request, response);			
 		}
-		else if(action.equals("deleteTrademark")){
-			this.deleteTrademark(request, response);			
+		else if(action.equals("changeStateTrademark")){
+			this.changeStateTrademark(request, response);			
 		}
 		else if(action.equals("showImageUpdater")){
 			this.showImageUpdater(request, response);
 		}
 		else if(action.equals("upload")){
 			this.updateFile(request, response);			
+		}
+		else if(action.equals("autocompleteName")){
+			this.autocompleteName(request,response);
+		}
+		else if(action.equals("deleteImage")){
+			this.deleteImage(request,response);
 		}
 		
 	}
@@ -89,8 +94,12 @@ public class TrademarkController extends HttpServlet {
 		String name=request.getParameter("f_name");
 		request.setAttribute("f_name", name);
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Collection<Trademark> list=trademarkBusiness.listTrademarks(name);
+		String state=request.getParameter("f_state");
+		if(state==null) state="1";
+		request.setAttribute("f_state", state);
+		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+		Collection<Trademark> list=trademarkBusiness.listTrademarks(name,Integer.parseInt(state));
 		
 		request.setAttribute("listTrademarks", list);		
 		if(request.getParameter("ajax")==null){
@@ -109,7 +118,7 @@ public class TrademarkController extends HttpServlet {
 	private void showUpdateTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 		Trademark trademark=trademarkBusiness.getTrademark(Integer.parseInt(id));		
 				
 		request.setAttribute("trademark",trademark);		
@@ -120,7 +129,7 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");
 		String name=request.getParameter("name");
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 		Trademark trademark=trademarkBusiness.saveTrademark(Integer.parseInt(id), name);
 		
 		response.setContentType("text/html");
@@ -132,22 +141,14 @@ public class TrademarkController extends HttpServlet {
 		}
 	}
 	
-	private void deleteTrademark(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String DIRECTORY = request.getServletContext().getRealPath("/");
+	private void changeStateTrademark(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String id=request.getParameter("id");
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
-		Trademark trademarkDeleted=trademarkBusiness.getTrademark(Integer.parseInt(id));
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();		
 				
 		response.setContentType("text/html");
-		if(trademarkBusiness.deleteTrademark(Integer.parseInt(id))){
-			String realPath=DIRECTORY+trademarkDeleted.getPath();
-			if(new File(realPath).delete()){
-				response.getWriter().print("ok");
-			}
-			else{
-				response.getWriter().print("File error");
-			}
+		if(trademarkBusiness.changeStateTrademark(Integer.parseInt(id))){
+			response.getWriter().print("ok");			
 		}
 		else{
 			response.getWriter().print("error");
@@ -165,6 +166,23 @@ public class TrademarkController extends HttpServlet {
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"image/formImageUpload").forward(request, response);		
 	}
 	
+	private void autocompleteName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String name=request.getParameter("f_name");
+		request.setAttribute("f_name", name);
+		
+		String state=request.getParameter("f_state");
+		if(state==null) state="1";
+		request.setAttribute("f_state", state);
+		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+		String json=trademarkBusiness.autocompleteName(name, Integer.parseInt(state));
+		
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().print(json);	
+		
+	}
+	
 	private void updateFile(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String DIRECTORY = request.getServletContext().getRealPath("/");		
 		System.out.println(DIRECTORY);		
@@ -173,7 +191,7 @@ public class TrademarkController extends HttpServlet {
 			try {
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(new ServletRequestContext(request));
 				
-				TrademarkBusiness trademarkBusiness=new TrademarkBusiness(new TrademarkDAOImpl());
+				TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 				String resp=trademarkBusiness.uploadFile(multiparts, DIRECTORY);
 				
 				PrintWriter out=response.getWriter();
@@ -185,6 +203,19 @@ public class TrademarkController extends HttpServlet {
 			}
 		}
 		
+	}
+	
+	private void deleteImage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String DIRECTORY = request.getServletContext().getRealPath("/");
+		String id=request.getParameter("id");
+		
+		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+		if(trademarkBusiness.deleteFile(DIRECTORY, Integer.parseInt(id))){
+			response.getWriter().print("ok");	
+		}
+		else{
+			response.getWriter().print("Error delete file");	
+		}
 	}
 	
 	private String doUploadMessage(String message){

@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.utils.AutoMake;
+import pcs.interfaces.AutoMake;
+import pcs.interfacesDAO.WeightUnitDAO;
 import pcs.weightUnit.WeightUnit;
-import pcs.weightUnit.WeightUnitDAO;
 import pcs.weightUnit.WeightUnitDAOImpl;
 
 public class Weight implements AutoMake<Weight>, Serializable{
@@ -60,14 +60,6 @@ public class Weight implements AutoMake<Weight>, Serializable{
 		this.weightUnit = weightUnit;
 	}
 	
-	public static Weight makeWeight(ResultSet rs) throws SQLException{
-		int id=rs.getInt("id");
-		float value=rs.getFloat("value");
-		int idWeightUnit=rs.getInt("id_weight_unit");		
-		
-		return new Weight(id,value,idWeightUnit);
-	}
-
 	@Override
 	public Weight autoMake(ResultSet rs) throws SQLException {
 		int id=rs.getInt("id");

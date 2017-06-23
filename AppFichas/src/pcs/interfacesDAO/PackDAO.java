@@ -1,6 +1,8 @@
-package pcs.pack;
+package pcs.interfacesDAO;
 
 import java.util.Collection;
+
+import pcs.pack.Pack;
 
 public interface PackDAO {
 	

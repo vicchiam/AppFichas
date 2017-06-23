@@ -1,10 +1,12 @@
-package pcs.trademark;
+package pcs.interfacesDAO;
 
 import java.util.Collection;
 
+import pcs.trademark.Trademark;
+
 public interface TrademarkDAO {
 	
-	public Collection<Trademark> listTrademarks(String name);
+	public Collection<Trademark> listTrademarks(String name, int state);
 	
 	public Trademark getTrademark(int id);
 	
@@ -12,7 +14,7 @@ public interface TrademarkDAO {
 	
 	public Trademark updateTrademark(Trademark trademark);
 	
-	public boolean deleteTrademark(int id);
+	public boolean changeStateTrademark(int id);
 	
 	public boolean updateTrademarkPath(int id, String path);
 	

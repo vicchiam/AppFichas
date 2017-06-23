@@ -1,6 +1,8 @@
-package pcs.weightUnit;
+package pcs.interfacesDAO;
 
 import java.util.Collection;
+
+import pcs.weightUnit.WeightUnit;
 
 public interface WeightUnitDAO {
 	

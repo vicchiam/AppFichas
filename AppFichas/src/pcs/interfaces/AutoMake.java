@@ -1,4 +1,4 @@
-package pcs.utils;
+package pcs.interfaces;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

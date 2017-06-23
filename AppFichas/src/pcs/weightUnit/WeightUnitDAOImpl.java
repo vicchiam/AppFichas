@@ -2,15 +2,16 @@ package pcs.weightUnit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import pcs.abstracts.DAO;
+import pcs.interfacesDAO.WeightUnitDAO;
 import pcs.utils.JDBCUtil;
 
-public class WeightUnitDAOImpl implements WeightUnitDAO {
+public class WeightUnitDAOImpl extends DAO<WeightUnit> implements WeightUnitDAO {
 	
 	private String SELECT_SQL="SELECT id, name, conversionToKgm, state FROM weight_unit WHERE state=? ORDER BY name";
 	private String SELECT_ID_SQL="SELECT id, name, conversionToKgm, state FROM weight_unit WHERE id=?";
@@ -21,25 +22,16 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 
 	@Override
 	public Collection<WeightUnit> listWeightUnits(int state) {
-		Collection<WeightUnit> list=new ArrayList<>();
+		Collection<WeightUnit> listWeightUnits=new ArrayList<>();
 		try {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(SELECT_SQL);	
 			ps.setInt(1, state);
-			ResultSet rs=ps.executeQuery();			
-			while(rs.next()){
-				list.add(WeightUnit.makeWeightUnit(rs));
-			}			
-			rs.close();
-			ps.close();
+			listWeightUnits=super.list(ps, new WeightUnit());
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();			
-		}
-		return list;
+		}		
+		return listWeightUnits;
 	}
 
 	@Override
@@ -49,22 +41,12 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(SELECT_ID_SQL);
 			ps.setInt(1, id);
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				weightUnit=WeightUnit.makeWeightUnit(rs);
-			}				
-			rs.close();
-			ps.close();
+			weightUnit=super.get(ps, weightUnit);
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {			
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}	
-		return weightUnit;
+		}		
+		return null;
 	}
 
 	@Override
@@ -74,21 +56,11 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(SELECT_NAME_SQL);
 			ps.setString(1, name);			
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				weightUnit=WeightUnit.makeWeightUnit(rs);
-			}				
-			rs.close();
-			ps.close();			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			weightUnit=super.get(ps, weightUnit);		
+		} catch (SQLException e) {			
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}	
-		return weightUnit;
+		}			
+		return null;
 	}
 
 	@Override
@@ -99,23 +71,12 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 			ps.setString(1, weightUnit.getName());	
 			ps.setFloat(2,weightUnit.getConversionToKgm());
 			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next())
-            {
-            	int last_inserted_id = rs.getInt(1);
-            	weightUnit.setId(last_inserted_id);
-            }
-            rs.close();
-			ps.close();
-            return weightUnit;
-			
+			int id=super.insert(ps);
+			weightUnit.setId(id);
+            return weightUnit;			
 		} catch (SQLException e) {			
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return null;
 	}
 
@@ -127,19 +88,13 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 			ps.setString(1, weightUnit.getName());
 			ps.setFloat(2, weightUnit.getConversionToKgm());
 			ps.setInt(3, weightUnit.getId());
-			int res=ps.executeUpdate();			
-			ps.close();
+			int res=super.update(ps);	
 			if(res>0){
 				return weightUnit;
-			}
-			
+			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return null;
 	}
 
@@ -149,18 +104,10 @@ public class WeightUnitDAOImpl implements WeightUnitDAO {
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(CHANGE_STATE_SQL);
 			ps.setInt(1, id);
-			int res=ps.executeUpdate();			
-			ps.close();
-			if(res>0){
-				return true;
-			}			
+			return super.operation(ps);		
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
-			e.printStackTrace();
-		}
+		}		
 		return false;
 	}
 	

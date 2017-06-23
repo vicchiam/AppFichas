@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.json.simple.JSONArray;
 
+import pcs.interfacesDAO.UserDAO;
+
 
 public class UserBusiness {
 	
@@ -49,7 +51,7 @@ public class UserBusiness {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String listUsersAutocomplete(String userName, String mail, int type, int state){
+	public String autocompleteUser(String userName, String mail, int type, int state){
 		JSONArray root = new JSONArray();
 		
 		Collection<User> listUsers=this.userDAO.listUsers(userName, mail, type, state);
@@ -60,7 +62,7 @@ public class UserBusiness {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String listMailsAutocomplete(String userName, String mail, int type, int state){
+	public String autocompleteMail(String userName, String mail, int type, int state){
 		JSONArray root = new JSONArray();
 		
 		Collection<User> listUsers=this.userDAO.listUsers(userName, mail, type, state);

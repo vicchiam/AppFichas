@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import pcs.utils.DAO;
+import pcs.abstracts.DAO;
+import pcs.interfacesDAO.TrademarkDAO;
 import pcs.utils.JDBCUtil;
 
 public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 	
-	private String SELECT_SQL="SELECT id, name, path FROM trademark t  ";
-	private String SELECT_ID_SQL="SELECT id, name, path FROM trademark WHERE id=?";
+	private String SELECT_SQL="SELECT id, name, path, state FROM trademark t  ";
+	private String SELECT_ID_SQL="SELECT id, name, path, state FROM trademark WHERE id=?";
 	private String INSERT_SQL="INSERT INTO trademark (name,path) VALUES(?,NULL)";
 	private String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
-	private String DELETE_SQL="DELETE FROM trademark WHERE id=?";
+	private String UPDATE_STATE_SQL="UPDATE trademark SET state=if(state=0,1,0) WHERE id=?";
 	private String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
 	private String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE ut.id_user=? order by t.name";
 	private String SELECT_USER_TRADEMARK_SQL_NOT="SELECT t.id, t.name, t.path FROM trademark t WHERE t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?) order by t.name";
@@ -27,11 +28,11 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 	public TrademarkDAOImpl() {}
 
 	@Override
-	public Collection<Trademark> listTrademarks(String name) {
+	public Collection<Trademark> listTrademarks(String name, int state) {
 		Collection<Trademark> listTrademarks=new ArrayList<>();
 		try {
 			Connection conn=JDBCUtil.getConnection();
-			PreparedStatement ps=this.prepareParams(conn, name);				
+			PreparedStatement ps=this.prepareParams(conn, name, state);				
 			listTrademarks=super.list(ps, new Trademark());			
 		} catch (SQLException e) {			
 			e.printStackTrace();
@@ -51,7 +52,7 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}				
-		return trademark;
+		return null;
 	}
 
 	@Override
@@ -89,12 +90,12 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 	}
 
 	@Override
-	public boolean deleteTrademark(int id) {
+	public boolean changeStateTrademark(int id) {
 		try {
 			Connection conn=JDBCUtil.getConnection();
-			PreparedStatement ps=conn.prepareStatement(DELETE_SQL);
+			PreparedStatement ps=conn.prepareStatement(UPDATE_STATE_SQL);
 			ps.setInt(1, id);
-			return super.change(ps);
+			return super.operation(ps);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -108,7 +109,7 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 			PreparedStatement ps=conn.prepareStatement(UPDATE_PATH_SQL);
 			ps.setString(1, path);
 			ps.setInt(2, id);
-			return super.change(ps);		
+			return super.operation(ps);		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -131,23 +132,20 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 			Connection conn=JDBCUtil.getConnection();
 			PreparedStatement ps=conn.prepareStatement(SQL);
 			ps.setInt(1, idUser);
-			listTrademarks=super.list(ps, new Trademark());
-			
+			listTrademarks=super.list(ps, new Trademark());			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(Exception e){
-			JDBCUtil.closeConnection();
+			
 			e.printStackTrace();
 		}		
 		return listTrademarks;
 	}
 	
-	private PreparedStatement prepareParams(Connection conn, String name) throws SQLException{
+	private PreparedStatement prepareParams(Connection conn, String name, int state) throws SQLException{
 		String sql=SELECT_SQL;
 		List<String> where=new ArrayList<>();
 		List<Object> params=new ArrayList<>();		
+		where.add(" state=? ");
+		params.add(state);
 		if(name!=null && name.length()>0){		
 			where.add(" name like ? ");
 			params.add(name+"%");
@@ -177,15 +175,11 @@ public class TrademarkDAOImpl extends DAO<Trademark> implements TrademarkDAO{
 			PreparedStatement ps=conn.prepareStatement(SQL);
 			ps.setInt(1, idUser);
 			ps.setInt(2, idTrademark);
-			return super.change(ps);	
+			return super.operation(ps);	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
 		return false;
-	}
-
-	
-
-		
+	}	
 
 }

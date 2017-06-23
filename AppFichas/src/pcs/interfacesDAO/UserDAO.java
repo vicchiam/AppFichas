@@ -1,6 +1,8 @@
-package pcs.users;
+package pcs.interfacesDAO;
 
 import java.util.Collection;
+
+import pcs.users.User;
 
 public interface UserDAO {
 	

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.utils.AutoMake;
+import pcs.interfaces.AutoMake;
 
 public class User implements AutoMake<User>, Serializable{
 
@@ -97,15 +97,6 @@ public class User implements AutoMake<User>, Serializable{
 	public void setState(int state) {
 		this.state = state;
 	}	
-	
-	public static User makeUser(ResultSet rs) throws SQLException{		
-			int id=rs.getInt("id");
-			String user=rs.getString("user");
-			String mail=rs.getString("mail");
-			int type=rs.getInt("type");
-			int state=rs.getInt("state");
-			return new User(id,user,mail,type,state);		
-	}
 	
 	public String getTypeName(){
 		return User.typeNames[this.type-1];
