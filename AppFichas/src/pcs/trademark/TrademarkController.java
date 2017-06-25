@@ -2,6 +2,7 @@ package pcs.trademark;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -99,7 +100,12 @@ public class TrademarkController extends HttpServlet {
 		request.setAttribute("f_state", state);
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-		Collection<Trademark> list=trademarkBusiness.listTrademarks(name,Integer.parseInt(state));
+		Collection<Trademark> list=new ArrayList<>();
+		try {
+			list = trademarkBusiness.listTrademarks(name,Integer.parseInt(state));
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+		}
 		
 		request.setAttribute("listTrademarks", list);		
 		if(request.getParameter("ajax")==null){
@@ -119,7 +125,13 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-		Trademark trademark=trademarkBusiness.getTrademark(Integer.parseInt(id));		
+		Trademark trademark;
+		try {
+			trademark = trademarkBusiness.getTrademark(Integer.parseInt(id));
+		} catch (NumberFormatException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 				
 		request.setAttribute("trademark",trademark);		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);

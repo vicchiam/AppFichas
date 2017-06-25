@@ -1,6 +1,7 @@
 package pcs.trademark;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,23 +21,23 @@ public class TrademarkBusiness {
 		this.trademarkDAO=new TrademarkDAOImpl();
 	}
 	
-	public Collection<Trademark> listTrademarks(){
+	public Collection<Trademark> listTrademarks() throws SQLException{
 		return this.trademarkDAO.listTrademarks("",1);
 	}
 	
-	public Collection<Trademark> listTrademarks(String name, int state){
+	public Collection<Trademark> listTrademarks(String name, int state) throws SQLException{
 		return this.trademarkDAO.listTrademarks(name, state);
 	}
 	
-	public Trademark getTrademark(int id){
+	public Trademark getTrademark(int id) throws SQLException{
 		return this.trademarkDAO.getTrademark(id);
 	}
 	
-	public Trademark saveTrademark(int id, String name){
+	public Trademark saveTrademark(int id, String name) throws SQLException{
 		Trademark trademark=new Trademark(id,name);
 		
 		if(trademark.getId()==0){
-			trademark=trademarkDAO.createTrademark(trademark);
+			trademark=trademarkDAO.insertTrademark(trademark);
 		}
 		else{
 			trademark=trademarkDAO.updateTrademark(trademark);
@@ -45,28 +46,28 @@ public class TrademarkBusiness {
 		return trademark;		
 	}
 	
-	public boolean changeStateTrademark(int id){
+	public boolean changeStateTrademark(int id) throws SQLException{
 		return this.trademarkDAO.changeStateTrademark(id);
 	}
 	
-	public Collection<Trademark> listUserTrademarks(int idUser){
+	public Collection<Trademark> listUserTrademarks(int idUser) throws SQLException{
 		return this.trademarkDAO.listTrademarksForUser(idUser);
 	}
 	
-	public Collection<Trademark> listUserTrademarksNot(int idUser){
+	public Collection<Trademark> listUserTrademarksNot(int idUser) throws SQLException{
 		return this.trademarkDAO.listTrademarksForUserNot(idUser);
 	}
 	
-	public boolean addUserTrademark(int idUser, int idTrademark){
+	public boolean addUserTrademark(int idUser, int idTrademark) throws SQLException{
 		return this.trademarkDAO.addUserTrademark(idUser, idTrademark);
 	}
 	
-	public boolean removeUserTrademark(int idUser, int idTrademark){
+	public boolean removeUserTrademark(int idUser, int idTrademark) throws SQLException{
 		return this.trademarkDAO.removeUserTrademark(idUser, idTrademark);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String autocompleteName(String name, int state){
+	public String autocompleteName(String name, int state) throws SQLException{
 		JSONArray root = new JSONArray();
 		
 		Collection<Trademark> listTrademarks=this.trademarkDAO.listTrademarks(name, state);
@@ -113,7 +114,7 @@ public class TrademarkBusiness {
     	}
 	}	
 	
-	public boolean deleteFile(String DIRECTORY, int id){
+	public boolean deleteFile(String DIRECTORY, int id) throws SQLException{
 		String path=this.getTrademark(id).getPath();
 		String realPath=DIRECTORY+path;
 		File f=new File(realPath);

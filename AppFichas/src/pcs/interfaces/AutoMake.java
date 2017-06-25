@@ -7,4 +7,6 @@ public interface AutoMake<T> {
 	
 	public T autoMake(ResultSet rs)  throws SQLException;
 	
+	public void setId(int id);
+	
 }

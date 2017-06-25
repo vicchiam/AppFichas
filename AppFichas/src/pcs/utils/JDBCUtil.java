@@ -1,10 +1,6 @@
 package pcs.utils;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -50,33 +46,5 @@ public class JDBCUtil {
 	public static void closeConnection(){
 		connection=null;
 	}
-	
-	public static PreparedStatement getPreparedStatement(Connection conn, String sql, List<Object> params) throws SQLException{
-		PreparedStatement ps=conn.prepareStatement(sql);
 		
-		int i=1;
-		for(Object param: params){
-			if(param instanceof Date){
-				i++;
-			}
-			else if(param instanceof Integer){
-				ps.setInt(i++, ((Integer)param));
-			}
-			else if(param instanceof Long){
-				ps.setLong(i++,((Long)param));
-			}
-			else if(param instanceof Float){
-				ps.setFloat(i++,((Float)param));
-			}
-			else if(param instanceof Double){
-				ps.setDouble(i++,((Double)param));
-			}
-			else{
-				ps.setString(i++,((String)param));
-			}			
-		}		
-		
-		return ps;
-	}
-
 }

@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import pcs.abstracts.Generic;
 import pcs.interfaces.AutoMake;
 import pcs.utils.Params;
 
-public class Trademark implements AutoMake<Trademark>, Serializable{
+public class Trademark extends Generic<Trademark> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -44,6 +45,7 @@ public class Trademark implements AutoMake<Trademark>, Serializable{
 		return id;
 	}
 
+	@Override
 	public void setId(int id) {
 		this.id = id;
 	}
