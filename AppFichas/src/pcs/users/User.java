@@ -4,16 +4,15 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.interfaces.AutoMake;
+import pcs.generic.Generic;
 
-public class User implements AutoMake<User>, Serializable{
+public class User extends Generic<User> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	public final static String[] typeNames={"Administrador","Usuario","Cliente"};		
 	public final static String[] stateNames={"Pasivo","Activo"};
 	
-	private int id;
 	private String user;
 	private String mail;
 	private String password;
@@ -21,8 +20,7 @@ public class User implements AutoMake<User>, Serializable{
 	private int state;
 	
 	public User(){
-		super();
-		this.id = 0;
+		super(0);
 		this.user = "";
 		this.mail = "";
 		this.password = "";
@@ -31,8 +29,7 @@ public class User implements AutoMake<User>, Serializable{
 	}
 
 	public User(int id, String user, String mail, String password, int type, int state) {
-		super();
-		this.id = id;
+		super(id);
 		this.user = user;
 		this.mail = mail;
 		this.password = password;
@@ -41,21 +38,12 @@ public class User implements AutoMake<User>, Serializable{
 	}
 	
 	public User(int id, String user, String mail, int type, int state) {
-		super();
-		this.id = id;
+		super(id);
 		this.user = user;
 		this.mail = mail;
 		this.password = "";
 		this.type=type;
 		this.state=state;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getUser() {

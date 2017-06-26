@@ -4,67 +4,35 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.interfaces.AutoMake;
-import pcs.interfacesDAO.WeightDAO;
-import pcs.weight.Weight;
-import pcs.weight.WeightDAOImpl;
+import pcs.generic.Generic;
 
-public class Pack implements AutoMake<Pack>, Serializable{
+public class Pack extends Generic<Pack> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private int id;
 	private String description;
-	private int width;
-	private int height;
-	private int depth;
-	private Weight weight;
+	private String mesure;
+	private String weight;
 	private int apt;
 	private int state;
 	
 	public Pack() {
-		this.id = 0;
+		super(0);
 		this.description = "";
-		this.width = 0;
-		this.height = 0;
-		this.depth = 0;
-		this.weight = null;
+		this.mesure="";
+		this.weight = "";
 		this.apt = 0;
 		this.state = 0;
 	}
 	
-	public Pack(int id, String description, int width, int height, int depth, Weight weight, int apt, int state) {
-		this.id = id;
+	public Pack(int id, String description, String mesure, String weight, int apt, int state) {
+		super(id);
 		this.description = description;
-		this.width = width;
-		this.height = height;
-		this.depth = depth;
+		this.mesure=mesure;
 		this.weight = weight;
 		this.apt = apt;
 		this.state=state;
-	}
-	
-	public Pack(int id, String description, int width, int height, int depth, int idWeight, int apt, int state) {
-		this.id = id;
-		this.description = description;
-		this.width = width;
-		this.height = height;
-		this.depth = depth;
-		
-		WeightDAO weightDAO=new WeightDAOImpl();
-		
-		this.weight = weightDAO.getWeight(idWeight);
-		this.apt = apt;
-		this.state=state;
 	}	
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getDescription() {
 		return description;
@@ -74,35 +42,19 @@ public class Pack implements AutoMake<Pack>, Serializable{
 		this.description = description;
 	}
 
-	public int getWidth() {
-		return width;
+	public String getMesure() {
+		return mesure;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setMesure(String mesure) {
+		this.mesure = mesure;
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
-	public Weight getWeight() {
+	public String getWeight() {
 		return weight;
 	}
 
-	public void setWeight(Weight weight) {
+	public void setWeight(String weight) {
 		this.weight = weight;
 	}
 
@@ -127,14 +79,12 @@ public class Pack implements AutoMake<Pack>, Serializable{
 		
 		int id=rs.getInt("id");
 		String description=rs.getString("description");
-		int width=rs.getInt("width");
-		int height=rs.getInt("height");
-		int depth=rs.getInt("depth");
+		String mesure=rs.getString("mesure");
+		String weight=rs.getString("weight");
 		int apt=rs.getInt("apt");
-		int state=rs.getInt("state");
-		int id_weight=rs.getInt("id_weight");		
+		int state=rs.getInt("state");				
 		
-		return new Pack(id, description, width, height, depth, id_weight, apt, state);
+		return new Pack(id, description, mesure, weight, apt, state);
 	}
 	
 	

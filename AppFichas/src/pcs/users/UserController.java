@@ -1,6 +1,7 @@
 package pcs.users;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,7 +18,6 @@ import org.apache.log4j.Logger;
 
 import pcs.trademark.Trademark;
 import pcs.trademark.TrademarkBusiness;
-import pcs.trademark.TrademarkDAOImpl;
 import pcs.utils.Params;
 import pcs.utils.ServletUtils;
 import pcs.utils.Window;
@@ -131,16 +131,22 @@ public class UserController extends HttpServlet {
 		if(state==null) state="1";
 		request.setAttribute("f_state", state);		
 		
-		UserBusiness userBusiness=new UserBusiness();
-		Collection<User> listUsers=userBusiness.listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
-		
-		request.setAttribute("listUsers", listUsers);
-		if(request.getParameter("ajax")==null){
-			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/user").forward(request, response);
+		try{
+			UserBusiness userBusiness=new UserBusiness();
+			Collection<User> listUsers=userBusiness.listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
+			
+			request.setAttribute("listUsers", listUsers);
+			if(request.getParameter("ajax")==null){
+				ServletUtils.setResponseController(this, Params.JSP_PATH+"users/user").forward(request, response);
+			}
+			else{
+				ServletUtils.setResponseController(this, Params.JSP_PATH+"users/listUsers").forward(request, response);
+			}	
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
 		}
-		else{
-			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/listUsers").forward(request, response);
-		}		
+		
 	}
 	
 	private void showNewUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -151,11 +157,16 @@ public class UserController extends HttpServlet {
 	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
 		
-		UserBusiness userBusiness=new UserBusiness();
-		User user=userBusiness.getUser(Integer.parseInt(id));
-		request.setAttribute("user",user);
+		try {
+			UserBusiness userBusiness=new UserBusiness();
+			User user = userBusiness.getUser(Integer.parseInt(id));
+			request.setAttribute("user",user);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
+		}
 		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 	}
 	
 	private void showChangePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -169,124 +180,175 @@ public class UserController extends HttpServlet {
 		String id=request.getParameter("id");
 		request.setAttribute("id",id);
 		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-		Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(Integer.parseInt(id));
-		Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(Integer.parseInt(id));
+		try{
+			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+			Collection<Trademark> trademarks=trademarkBusiness.listUserTrademarksNot(Integer.parseInt(id));
+			Collection<Trademark> userTrademarks=trademarkBusiness.listUserTrademarks(Integer.parseInt(id));
+			
+			request.setAttribute("trademarks", trademarks);
+			request.setAttribute("userTrademarks", userTrademarks);		
+			
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUserTrademark").forward(request, response);
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
+		}
 		
-		request.setAttribute("trademarks", trademarks);
-		request.setAttribute("userTrademarks", userTrademarks);		
-		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUserTrademark").forward(request, response);
 	}
 	
-	private void saveUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void saveUser(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String id=request.getParameter("id");
 		String userName=request.getParameter("user");
 		String mail=request.getParameter("mail");
 		String type=request.getParameter("type");
 		
-		UserBusiness userBusiness=new UserBusiness();	
-		User user=userBusiness.saveUser(Integer.parseInt(id), userName, mail, Integer.parseInt(type));
-		
-		response.setContentType("text/html");
-		if(user!=null){
-			response.getWriter().print("ok");
-		}
-		else{
-			response.getWriter().print("error");
-		}	
+		try{
+			UserBusiness userBusiness=new UserBusiness();	
+			User user=userBusiness.saveUser(Integer.parseInt(id), userName, mail, Integer.parseInt(type));
+			
+			response.setContentType("text/html");
+			if(user!=null){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("error");
+			}	
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage(),true);
+		}		
 		
 	}
 	
-	private void changeStateUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void changeStateUser(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String id=request.getParameter("id");
 		
-		UserBusiness userBusiness=new UserBusiness();
-		
-		response.setContentType("text/html");
-		if(userBusiness.changeStateUser(Integer.parseInt(id))){
-			response.getWriter().print("ok");
-		}
-		else{
-			response.getWriter().print("error");
+		try{		
+			UserBusiness userBusiness=new UserBusiness();
+			response.setContentType("text/html");
+			if(userBusiness.changeStateUser(Integer.parseInt(id))){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("error");
+			}
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
 		}
 	}
 
-	private void savePassword(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void savePassword(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String id=request.getParameter("id");
 		String password=request.getParameter("password");
 		
-		UserBusiness userBusiness=new UserBusiness();
+		try{		
+			UserBusiness userBusiness=new UserBusiness();			
+			response.setContentType("text/html");
+			if(userBusiness.savePassword(Integer.parseInt(id), password)){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("error");
+			}			
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage(), true);
+		}
+	}
+	
+	private void autocompleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String userName=request.getParameter("f_user");
+		request.setAttribute("f_user", userName);
+		String mail=request.getParameter("f_mail");
+		request.setAttribute("f_mail", mail);
+		String type=request.getParameter("f_type");
+		request.setAttribute("f_type", type);		
+		String state=request.getParameter("f_state");		
+		request.setAttribute("f_state", state);				
 		
-		response.setContentType("text/html");
-		if(userBusiness.savePassword(Integer.parseInt(id), password)){
+		try{
+			String json=new UserBusiness().autocompleteUser(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().print(json);		
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
+		}
+	}
+	
+	private void autocompleteMail(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String userName=request.getParameter("f_user");
+		request.setAttribute("f_user", userName);
+		String mail=request.getParameter("f_mail");
+		request.setAttribute("f_mail", mail);
+		String type=request.getParameter("f_type");
+		request.setAttribute("f_type", type);		
+		String state=request.getParameter("f_state");		
+		request.setAttribute("f_state", state);				
+		
+		try{
+			String json=new UserBusiness().autocompleteMail(userName, mail, Integer.parseInt(type), Integer.parseInt(state));			
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().print(json);
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage(),true);
+		}
+		
+	}
+	
+	private void addUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String idUser=request.getParameter("id");
+		String idsTrademarks=request.getParameter("idsTrademarks");
+				
+		try{
+			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+			for(String idTrademark : idsTrademarks.split("__")){
+				if(!trademarkBusiness.addUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
+					response.getWriter().print("Error add User-Trademark");	
+				}
+			}
+		response.getWriter().print("ok");
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage(),true);
+		}
+		
+	}
+	
+	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+		String idUser=request.getParameter("id");
+		String idsTrademarks=request.getParameter("idsTrademarks");
+		
+		try{
+			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();			
+			for(String idTrademark : idsTrademarks.split("__")){
+				if(!trademarkBusiness.removeUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
+					response.getWriter().print("Error remove User-Trademark");	
+				}
+			}
 			response.getWriter().print("ok");
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			this.showError(request, response, e.getMessage());
+		}
+	}
+	
+	private void showError(HttpServletRequest request, HttpServletResponse response, String message, boolean isAjax) throws ServletException, IOException{
+		if(isAjax){
+			response.getWriter().print(message);
 		}
 		else{
-			response.getWriter().print("error");
-		}		
-	}
-	
-	private void autocompleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String userName=request.getParameter("f_user");
-		request.setAttribute("f_user", userName);
-		String mail=request.getParameter("f_mail");
-		request.setAttribute("f_mail", mail);
-		String type=request.getParameter("f_type");
-		request.setAttribute("f_type", type);		
-		String state=request.getParameter("f_state");		
-		request.setAttribute("f_state", state);				
-		
-		String json=new UserBusiness().autocompleteUser(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
-		
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().print(json);		
-	}
-	
-	private void autocompleteMail(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String userName=request.getParameter("f_user");
-		request.setAttribute("f_user", userName);
-		String mail=request.getParameter("f_mail");
-		request.setAttribute("f_mail", mail);
-		String type=request.getParameter("f_type");
-		request.setAttribute("f_type", type);		
-		String state=request.getParameter("f_state");		
-		request.setAttribute("f_state", state);				
-		
-		String json=new UserBusiness().autocompleteMail(userName, mail, Integer.parseInt(type), Integer.parseInt(state));		
-		
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().print(json);		
-	}
-	
-	private void addUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String idUser=request.getParameter("id");
-		String idsTrademarks=request.getParameter("idsTrademarks");
-		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-		
-		for(String idTrademark : idsTrademarks.split("__")){
-			if(!trademarkBusiness.addUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
-				response.getWriter().print("Error add User-Trademark");	
-			}
+			request.setAttribute("Error", message);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"error").forward(request, response);
 		}
-		response.getWriter().print("ok");		
 	}
 	
-	private void removeUserTrademarks(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String idUser=request.getParameter("id");
-		String idsTrademarks=request.getParameter("idsTrademarks");
-		
-		TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-		
-		for(String idTrademark : idsTrademarks.split("__")){
-			if(!trademarkBusiness.removeUserTrademark(Integer.parseInt(idUser), Integer.parseInt(idTrademark))){
-				response.getWriter().print("Error remove User-Trademark");	
-			}
-		}
-		response.getWriter().print("ok");	
+	private void showError(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
+		this.showError(request, response, message, false);
 	}
 	
 }

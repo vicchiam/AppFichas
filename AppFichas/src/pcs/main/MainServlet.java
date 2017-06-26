@@ -1,6 +1,7 @@
 package pcs.main;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -56,10 +57,16 @@ public class MainServlet extends HttpServlet {
 		String action=request.getParameter("action");
 		
 		if(action.equals("startSession")){			
-			
-			String userName=request.getParameter("user");
-			String password=request.getParameter("password");			
-			
+			this.login(request,response);			
+		}
+		
+	}
+	
+	private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String userName=request.getParameter("user");
+		String password=request.getParameter("password");			
+					
+		try{
 			UserBusiness userBusiness=new UserBusiness();
 			User user=userBusiness.login(userName, password);
 			
@@ -72,8 +79,9 @@ public class MainServlet extends HttpServlet {
 				request.setAttribute("error", "user/pass incorrect");
 				ServletUtils.setResponseController(this, "/jsp/login").forward(request, response);
 			}
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
 		}
-		
 	}
 
 }

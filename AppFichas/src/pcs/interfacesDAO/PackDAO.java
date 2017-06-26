@@ -1,19 +1,20 @@
 package pcs.interfacesDAO;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import pcs.pack.Pack;
 
 public interface PackDAO {
 	
-	public Collection<Pack> listPacks(String description, int state);
+	public Collection<Pack> listPacks(String description, int apt, int state) throws SQLException;
 	
-	public Pack getPack(int id);
+	public Pack getPack(int id) throws SQLException;
 	
-	public Pack createPack(Pack pack);
+	public Pack insertPack(Pack pack) throws SQLException;
 	
-	public Pack updatePack(Pack pack);
+	public Pack updatePack(Pack pack) throws SQLException;
 	
-	public boolean changeStatePack(int id);
+	public boolean changeStatePack(int id) throws SQLException;
 
 }

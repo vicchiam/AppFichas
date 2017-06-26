@@ -1,5 +1,6 @@
 package pcs.users;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.json.simple.JSONArray;
@@ -15,26 +16,26 @@ public class UserBusiness {
 		this.userDAO=new UserDAOImpl();
 	}
 	
-	public User login(String user, String password){
+	public User login(String user, String password) throws SQLException{
 		return this.userDAO.loginUser(user, password);
 	}
 	
-	public Collection<User> listUsers(String user, String mail, int type, int state){		
+	public Collection<User> listUsers(String user, String mail, int type, int state) throws SQLException{		
 		return this.userDAO.listUsers(user, mail, type, state);
 	}
 	
-	public User getUser(int id){
+	public User getUser(int id) throws SQLException{
 		return this.userDAO.getUser(id);
 	}
 	
-	public User saveUser(int id, String userName, String mail, int type){
+	public User saveUser(int id, String userName, String mail, int type) throws SQLException{
 		User user=new User();
 		user.setId(id);
 		user.setUser(userName);
 		user.setMail(mail);
 		user.setType(type);	
 		if(user.getId()==0){
-			user=this.userDAO.createUser(user);
+			user=this.userDAO.insertUser(user);
 		}
 		else{
 			user=this.userDAO.updateUser(user);
@@ -42,16 +43,16 @@ public class UserBusiness {
 		return user;
 	}
 	
-	public boolean changeStateUser(int id){
+	public boolean changeStateUser(int id) throws SQLException{
 		return this.userDAO.changeStateUser(id);
 	}
 	
-	public boolean savePassword(int id, String password){
+	public boolean savePassword(int id, String password) throws SQLException{
 		return this.userDAO.changePassword(id, password);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String autocompleteUser(String userName, String mail, int type, int state){
+	public String autocompleteUser(String userName, String mail, int type, int state) throws SQLException{
 		JSONArray root = new JSONArray();
 		
 		Collection<User> listUsers=this.userDAO.listUsers(userName, mail, type, state);
@@ -62,7 +63,7 @@ public class UserBusiness {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String autocompleteMail(String userName, String mail, int type, int state){
+	public String autocompleteMail(String userName, String mail, int type, int state) throws SQLException{
 		JSONArray root = new JSONArray();
 		
 		Collection<User> listUsers=this.userDAO.listUsers(userName, mail, type, state);

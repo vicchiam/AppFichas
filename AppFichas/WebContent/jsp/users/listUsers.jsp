@@ -22,7 +22,7 @@
 				<select id="f_type">
 					<option value="0">*</option>
 					<c:forEach var="typeName" items="${requestScope.typeNames}" varStatus="status">
-					<option value="<c:out value='${status.count}'/>"  <c:if test = "${status.count==requestScope.f_type}">selected</c:if> ><c:out value='${typeName}'/></option>
+						<option value="<c:out value='${status.count}'/>"  <c:if test = "${status.count==requestScope.f_type}">selected</c:if> ><c:out value='${typeName}'/></option>
 					</c:forEach>
 				</select>				
 			</td>
@@ -54,9 +54,6 @@
 			</td>
          	</tr>
       	</c:forEach>
-	</table>
-	<div class="script">
-		<script type="text/javascript">Init();</script> 
-	</div>
+	</table>	
 </div>
 		

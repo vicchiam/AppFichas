@@ -1,17 +1,12 @@
 package pcs.trademark;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import pcs.abstracts.DAO;
-import pcs.abstracts.GenericDAO;
+import pcs.generic.GenericDAO;
 import pcs.interfacesDAO.TrademarkDAO;
-import pcs.utils.JDBCUtil;
 
 public class TrademarkDAOImpl implements TrademarkDAO{
 	
@@ -21,8 +16,8 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	public static String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
 	public static String UPDATE_STATE_SQL="UPDATE trademark SET state=if(state=0,1,0) WHERE id=?";
 	public static String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
-	public static String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE ut.id_user=? order by t.name";
-	public static String SELECT_NOT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path FROM trademark t WHERE t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?) order by t.name";
+	public static String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE t.state=1 AND ut.id_user=? order by t.name";
+	public static String SELECT_NOT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM trademark t WHERE t.state=1 AND t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?) order by t.name";
 	public static String INSERT_USER_TRADEMARK_SQL="INSERT INTO user_trademark (id_user,id_trademark) VALUES(?,?)";
 	public static String DELETE_USER_TRADEMARK_SQL="DELETE FROM user_trademark WHERE id_user=? and id_trademark=?";
 	
@@ -39,7 +34,8 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 
 	@Override
 	public Trademark getTrademark(int id) throws SQLException {
-		List<Object> params=new ArrayList<>(id);
+		List<Object> params=new ArrayList<>();
+		params.add(id);
 		return this.genericDAO.get(SELECT_ID_SQL, params, new Trademark());
 	}
 
@@ -76,7 +72,7 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	public Collection<Trademark> listTrademarksForUser(int idUser) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(idUser);
-		return this.genericDAO.list(INSERT_USER_TRADEMARK_SQL, params, new Trademark());
+		return this.genericDAO.list(SELECT_USER_TRADEMARK_SQL, params, new Trademark());
 	}
 	
 	@Override
@@ -91,7 +87,7 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		List<Object> params=new ArrayList<>();
 		params.add(idUser);
 		params.add(idTrademark);
-		return this.genericDAO.operation(INSERT_USER_TRADEMARK_SQL, params);
+		return this.genericDAO.operation(INSERT_USER_TRADEMARK_SQL, params);		
 	}
 
 	@Override

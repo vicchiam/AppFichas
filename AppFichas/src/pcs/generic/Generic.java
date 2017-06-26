@@ -1,4 +1,4 @@
-package pcs.abstracts;
+package pcs.generic;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

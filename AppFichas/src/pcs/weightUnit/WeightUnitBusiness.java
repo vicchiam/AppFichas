@@ -1,5 +1,6 @@
 package pcs.weightUnit;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import pcs.interfacesDAO.WeightUnitDAO;
@@ -8,23 +9,23 @@ public class WeightUnitBusiness {
 	
 	private WeightUnitDAO weightUnitDAO;
 	
-	public WeightUnitBusiness(WeightUnitDAO weightUnitDAO){
-		this.weightUnitDAO=weightUnitDAO;
+	public WeightUnitBusiness(){
+		this.weightUnitDAO=new WeightUnitDAOImpl();
 	} 
 
-	public Collection<WeightUnit> listWeightUnits(int state){
+	public Collection<WeightUnit> listWeightUnits(int state) throws SQLException{
 		return this.weightUnitDAO.listWeightUnits(state);
 	}
 	
-	public WeightUnit getWeightUnit(int id){
+	public WeightUnit getWeightUnit(int id) throws SQLException{
 		return this.weightUnitDAO.getWeightUnit(id);
 	}
 	
-	public WeightUnit getWeightUnit(String name){
+	public WeightUnit getWeightUnit(String name) throws SQLException{
 		return this.weightUnitDAO.getWeightUnit(name);
 	}
 	
-	public WeightUnit saveWeightUnit(WeightUnit weightUnit){
+	public WeightUnit saveWeightUnit(WeightUnit weightUnit) throws SQLException{
 		if(weightUnit.getId()==0){
 			return this.weightUnitDAO.createWeightUnit(weightUnit);
 		}
@@ -33,7 +34,7 @@ public class WeightUnitBusiness {
 		}
 	}
 	
-	public boolean changeStateWeightUnit(int id){
+	public boolean changeStateWeightUnit(int id) throws SQLException{
 		return this.weightUnitDAO.changeStateWeightUnit(id);
 	}
 	

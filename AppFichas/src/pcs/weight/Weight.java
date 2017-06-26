@@ -4,44 +4,35 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.interfaces.AutoMake;
+import pcs.generic.Generic;
 import pcs.interfacesDAO.WeightUnitDAO;
 import pcs.weightUnit.WeightUnit;
 import pcs.weightUnit.WeightUnitDAOImpl;
 
-public class Weight implements AutoMake<Weight>, Serializable{
+public class Weight extends Generic<Weight> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private int id;
 	private float value;
 	private WeightUnit weightUnit;
 	
 	public Weight() {
-		this.id = 0;
+		super(0);		
 		this.value = 0.0f;
 		this.weightUnit = new WeightUnit();
 	}
 	
 	public Weight(int id, float value, WeightUnit weightUnit) {
-		this.id = id;
+		super(id);
 		this.value = value;
 		this.weightUnit = weightUnit;
 	}
 	
-	public Weight(int id, float value, int idWeightUnit) {
-		this.id = id;
+	public Weight(int id, float value, int idWeightUnit) throws SQLException {
+		super(id);
 		this.value = value;		
 		WeightUnitDAO weightUnitDAO=new WeightUnitDAOImpl();		
 		this.weightUnit = weightUnitDAO.getWeightUnit(idWeightUnit);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public float getValue() {

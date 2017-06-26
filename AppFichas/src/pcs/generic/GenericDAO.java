@@ -1,4 +1,4 @@
-package pcs.abstracts;
+package pcs.generic;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import com.mysql.jdbc.Statement;
 
 import pcs.utils.JDBCUtil;
 
@@ -22,7 +24,9 @@ public class GenericDAO<T extends Generic<T>> {
 	
 	public T insert(String SQL, List<Object> params, T generic) throws SQLException{
 		int last_inserted_id=0;
-		ps=this.getPreparedStatement(SQL, params);
+		boolean generateKeys=true;
+		ps=this.getPreparedStatement(SQL, params, generateKeys);
+		
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
         if(rs.next()){
@@ -40,7 +44,8 @@ public class GenericDAO<T extends Generic<T>> {
 	}
 	
 	public T update(String SQL, List<Object> params, T generic) throws SQLException{
-		ps=this.getPreparedStatement(SQL, params);
+		boolean generateKeys=false;
+		ps=this.getPreparedStatement(SQL, params, generateKeys);
 		int res=ps.executeUpdate();
 		ps.close();
 		if(res>0){
@@ -50,7 +55,8 @@ public class GenericDAO<T extends Generic<T>> {
 	}
 	
 	public T get(String SQL, List<Object> params, T generic) throws SQLException{
-		ps=this.getPreparedStatement(SQL, params);
+		boolean generateKeys=false;
+		ps=this.getPreparedStatement(SQL, params, generateKeys);
 		ResultSet rs=ps.executeQuery();
 		if(rs.next()){
 			generic=generic.autoMake(rs);
@@ -62,7 +68,8 @@ public class GenericDAO<T extends Generic<T>> {
 	
 	public Collection<T> list(String SQL, List<Object> params, T generic) throws SQLException{
 		Collection<T> list=new ArrayList<T>();
-		ps=this.getPreparedStatement(SQL, params);
+		boolean generateKeys=false;
+		ps=this.getPreparedStatement(SQL, params, generateKeys);
 		ResultSet rs=ps.executeQuery();
 		while(rs.next()){
 			list.add(generic.autoMake(rs));
@@ -73,7 +80,8 @@ public class GenericDAO<T extends Generic<T>> {
 	}
 	
 	public boolean operation(String SQL, List<Object> params) throws SQLException{
-		ps=this.getPreparedStatement(SQL, params);
+		boolean generateKeys=false;
+		ps=this.getPreparedStatement(SQL, params, generateKeys);
 		int res=ps.executeUpdate();			
 		ps.close();
 		if(res>0){
@@ -82,8 +90,14 @@ public class GenericDAO<T extends Generic<T>> {
 		return false;
 	}
 	
-	private PreparedStatement getPreparedStatement(String SQL, List<Object> params) throws SQLException{
+	private PreparedStatement getPreparedStatement(String SQL, List<Object> params, boolean generateKeys) throws SQLException{
 		PreparedStatement ps=conn.prepareStatement(SQL);
+		if(generateKeys){
+			ps=conn.prepareStatement(SQL,Statement.RETURN_GENERATED_KEYS);
+		}
+		else{
+			ps=conn.prepareStatement(SQL);
+		}
 		
 		int i=1;
 		for(Object param: params){

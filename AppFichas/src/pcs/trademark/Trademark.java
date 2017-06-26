@@ -4,50 +4,36 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import pcs.abstracts.Generic;
-import pcs.interfaces.AutoMake;
+import pcs.generic.Generic;
 import pcs.utils.Params;
 
 public class Trademark extends Generic<Trademark> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private int id;
 	private String name;
 	private String path;
 	private int state;
 	
 	public Trademark() {
-		super();
-		this.id=0;
+		super(0);		
 		this.name="";
 		this.path="";
 		this.state=1;
 	}
 	
 	public Trademark(int id, String name) {
-		super();
-		this.id = id;
+		super(id);		
 		this.name = name;
 		this.path="";
 		this.state=1;
 	}
 
 	public Trademark(int id, String name, String path, int state) {
-		super();
-		this.id = id;
+		super(id);		
 		this.name = name;		
 		this.path=path;
 		this.state=state;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {
