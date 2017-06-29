@@ -8,7 +8,8 @@
 		style="display:none;
 			width:<c:out value='${window.width}' />px;
 			height:<c:out value='${window.height}' />px;
-			margin-left:-<c:out value='${window.width/2}' />px;			
+			margin-left:-<c:out value='${window.width/2}' />px;
+			margin-top:<c:out value='${window.level*10}' />px;			
 			">
 		<div class="window_head">
 			<span class="window_title"><c:out value='${window.title}' /></span>

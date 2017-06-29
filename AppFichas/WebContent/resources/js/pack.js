@@ -56,22 +56,10 @@ function Search(){
 	});
 }
 
-function ShowNewPack(){
+function ShowFormPack(id){
 	var url="/AppFichas/Packs";	
 	var data={
-			"action":"showNewPack"
-	};
-		
-	$.post(url,data,function(result){
-		$("#dynamic_PACK").html(result);	
-		OpenWindow("PACK");
-	});		
-}
-
-function ShowUpdatePack(id){
-	var url="/AppFichas/Packs";	
-	var data={
-			"action":"showUpdatePack",
+			"action":"showFormPack",
 			"id":id
 	};
 		
@@ -85,6 +73,11 @@ function SavePack(){
 	var id=$("#_id").val();
 	var description=$("#description").val();
 	var mesure=$("#mesure").val();
+	
+	if(description==""){
+		alert("Debes indicar una descripcion");
+		return null;
+	}
 	
 	var apt="";
 	if($("#apt").is(':checked')){
@@ -160,7 +153,7 @@ function SearchPackWeight(id_pack){
 	});	
 }
 
-function ShowNewPackWeight(){
+function ShowFormPackWeight(){
 	var url="/AppFichas/Packs";	
 	var data={
 			"action":"showFormPackWeight"
@@ -172,68 +165,30 @@ function ShowNewPackWeight(){
 	});		
 }
 
-
-
-/*
-function AddWeight(){
-	var ghost_select=document.getElementById("ghost_select");	
-	var html="<tr><td><input type='hidden' value='0' /><input class='right' type='text' /></td>";
-	html+="<td>"+ghost_select.innerHTML+"</td>";
-	html+="<td class='right'><input type='button' class='button_green' value='Guardar' onclick='SaveWeight(this)' />";
-	html+="<input type='button' class='button_red' value='Eliminar' onclick='DeleteWeight(this)' /></td></tr>";
-	$("#weights").append(html);
-}
-
-
-function getWeightValues(e){
-	var id_pack=$("#_id").val();
-	var id_weight=0;
-	var value=0;
-	var id_weightUnit=0;
-	$(e).parent().parent().find("input").each(function(index,element){
-		if(index==0){
-			id_weigth=$(this).val();
-		}
-		if(index==1){
-			value=$(this).val();
-		}
-	});
-	$(e).parent().parent().find("select").each(function(index,element){
-		if(index==0){
-			id_weightUnit=$(this).val();
-		}
-	});	
+function SavePackWeight(){
+	var id_pack=$("#_idPack").val();
+	var id_weight=$("#_idWeight").val();
+	var weight=$("#weightValue").val();
+	var id_weightUnit=$("#weightUnit").val();
 	
-	var data={
-		"id_pack":id_pack,
-		"id_weight":id_weight,
-		"id_weightUnit":id_weightUnit
-	}
-	return data;
-}
-
-function SaveWeight(e){
-	var data=getWeightValues(e);
-	data.action="savePackWeight";
 	var url="/AppFichas/Packs";
+	var data={
+			"action":"savePackWeight",
+			"id":id_pack,
+			"id_weight":id_weight,
+			"weight":weight,
+			"id_weightUnit":id_weightUnit
+	}
 		
 	$.post(url,data,function(result){
 		if(result=="ok"){
-			
+			SearchPackWeight(data.id_pack);
 		}
 		else{
 			alert(result);
 		}
-	});		
+	});	
 }
 
-function DeleteWeight(e){
-	var id_pack=$("#_id").val();
-	var id_weight=0;
-	$(e).parent().parent().find("input").each(function(index,element){
-		if(index==0){
-			id_weigth=$(this).val();
-		}		
-	});
-}
-*/
+
+

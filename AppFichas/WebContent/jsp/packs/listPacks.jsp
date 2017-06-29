@@ -25,7 +25,7 @@
 			<th>Description</th>
 			<th>Medidas</th>
 			<th>Peso vacio</th>						
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewPack()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormPack('0')" /></th>				
 		</tr>			
 		<c:forEach var="pack" items="${requestScope.listPacks}">
 		<tr class="row">
@@ -36,7 +36,7 @@
 				<img class="img_button float_right" src="/AppFichas/resources/images/user.png" onclick="ShowListPackWeight('<c:out value = "${pack.id}"/>')" />
 			</td>
 			<td class="der">				
-				<img title="Editar Envase" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdatePack('<c:out value = "${pack.id}"/>')" />
+				<img title="Editar Envase" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormPack('<c:out value = "${pack.id}"/>')" />
 				<img title="Cambiar estado Envase" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStatePack('<c:out value = "${pack.id}"/>')" />
 			</td>
          </tr>

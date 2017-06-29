@@ -16,14 +16,14 @@
 		<tr>
 			<th>Nombre</th>
 			<th>Conversión a Kgm</th>			
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewWeightUnit()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormWeightUnit('0')" /></th>				
 		</tr>			
 		<c:forEach var="weightUnit" items="${requestScope.listWeightUnits}">
 		<tr class="row">
 			<td><c:out value = "${weightUnit.name}"/></td>
 			<td class="der"><c:out value = "${weightUnit.conversionToKgm}"/></td>
 			<td class="der">
-				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateWeightUnit('<c:out value = "${weightUnit.id}"/>')" />
+				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormWeightUnit('<c:out value = "${weightUnit.id}"/>')" />
 				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateWeightUnit('<c:out value = "${weightUnit.id}"/>')" />
 			</td>
          </tr>

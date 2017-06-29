@@ -40,34 +40,27 @@ function Search(){
 	});
 }
 
-function ShowNewTrademark(){
+function ShowFormTrademark(id){
 	var url="/AppFichas/Trademarks";	
 	var data={
-			"action":"showNewTrademark"
-	};
-		
-	$.post(url,data,function(result){
-		$("#dynamic_TMK").html(result);	
-		OpenWindow("TMK");
-	});		
-}
-
-function ShowUpdateTrademark(id){
-	var url="/AppFichas/Trademarks";	
-	var data={
-			"action":"showUpdateTrademark",
+			"action":"showFormTrademark",
 			"id":id
 	};
 		
 	$.post(url,data,function(result){
 		$("#dynamic_TMK").html(result);	
 		OpenWindow("TMK");
-	});		
+	});	
 }
 
 function SaveTrademark(){
 	var id=$("#_id").val();
 	var name=$("#name").val();
+	
+	if(name==""){
+		alert("Debes indicar un nombre");
+		return;
+	}
 	
 	var url="/AppFichas/Trademarks";	
 	var data={

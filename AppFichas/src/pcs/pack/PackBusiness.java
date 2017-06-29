@@ -53,4 +53,9 @@ public class PackBusiness {
 		return root.toJSONString();	
 	}
 	
+	public boolean savePackWeight(int idPack, int idWeight, float value, int idWeightUnit){
+		
+		return false;
+	}
+	
 }

@@ -16,22 +16,10 @@ function Search(){
 	});
 }
 
-function ShowNewWeightUnit(){
+function ShowFormWeightUnit(id){
 	var url="/AppFichas/WeightUnits";	
 	var data={
-			"action":"showNewWeightUnit"
-	};
-		
-	$.post(url,data,function(result){
-		$("#dynamic_WUNT").html(result);	
-		OpenWindow("WUNT");
-	});		
-}
-
-function ShowUpdateWeightUnit(id){
-	var url="/AppFichas/WeightUnits";	
-	var data={
-			"action":"showUpdateWeightUnit",
+			"action":"showFormWeightUnit",
 			"id":id	
 	};
 		
@@ -50,7 +38,7 @@ function SaveWeightUnit(){
 	}
 	var conversion=$("#conversion").val();
 	if(conversion==""){
-		alert("Debes indicar una conexión");
+		alert("Debes indicar una conversión");
 		return;
 	}
 	conversion=conversion.replace(",",".");

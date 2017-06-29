@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="form">
+	<input type="hidden" id="_idWeight" value="<c:out value="${weight.id }" />" />	 
 	<table>
 		<tr>
 			<th>Peso</th>
@@ -9,10 +10,10 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="text" value="<c:out value="${weight.value}" />" id="peso" />
+				<input class="right" type="text" value="<c:out value="${weight.value}" />" id="weightValue" />
 			</td>
 			<td>
-				<select>
+				<select id="weightUnit">
 					<c:forEach var="weightUnit" items="${requestScope.weightUnits}" varStatus="status">
 						<option value="<c:out value='${weightUnit.id}'/>" <c:if test = "${weightUnit.id==weight.weightUnit.id}">selected</c:if> ><c:out value='${weightUnit.name}'/></option>
 					</c:forEach>
@@ -21,7 +22,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" class="center">
-				<input type="button" class="button_green" value="Guardar" onclick="SavePackWeight()" />
+				<input type="button" class="button_green" value="Guardar" onclick="SavePackWeight(this)" />
 			</td>
 		</tr>
 	</table>

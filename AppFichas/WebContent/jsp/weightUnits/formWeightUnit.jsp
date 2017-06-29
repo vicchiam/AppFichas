@@ -8,7 +8,7 @@
 				<input type="hidden" id="_id" value="<c:out value='${requestScope.weightUnit.id}'/>" />
 				<label for="name">Nombre:</label>
 			</td>
-			<td><input type="text" value="<c:out value='${requestScope.weightUnit.name}'/>" id="name" name="name" required/></td>
+			<td><input type="text" value="<c:out value='${requestScope.weightUnit.name}'/>" id="name" name="name" placeholder="Nombre de la unidad" required/></td>
 			
 		</tr>
 		<tr>

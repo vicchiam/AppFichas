@@ -59,11 +59,8 @@ public class TrademarkController extends HttpServlet {
 		if(action.equals("list")){
 			this.showListTrademarks(request, response);
 		}
-		else if(action.equals("showNewTrademark")){
-			this.showNewTrademark(request, response);
-		}
-		else if(action.equals("showUpdateTrademark")){
-			this.showUpdateTrademark(request, response);
+		else if(action.equals("showFormTrademark")){
+			this.showFormTrademark(request, response);
 		}
 		else if(action.equals("saveTrademark")){
 			this.saveTrademark(request, response);			
@@ -119,16 +116,14 @@ public class TrademarkController extends HttpServlet {
 			
 	}
 	
-	private void showNewTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("trademark",TrademarkBuilder.trademark().build());		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);
-	}
-	
-	private void showUpdateTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void showFormTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
-				
+		Trademark trademark=TrademarkBuilder.trademark().build();
+		
 		try {
-			Trademark trademark = new TrademarkBusiness().getTrademark(Integer.parseInt(id));
+			if(id!=null && !id.equals("0")){
+				trademark = new TrademarkBusiness().getTrademark(Integer.parseInt(id));
+			}
 			request.setAttribute("trademark",trademark);		
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);			
 		}

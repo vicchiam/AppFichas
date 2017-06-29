@@ -34,7 +34,7 @@ public class Weight extends Generic<Weight> implements Serializable{
 	}
 
 	public WeightUnit getWeightUnit() throws SQLException {
-		if(this.getWeightUnit().getId()!=Params.EMPTY_ID && this.weightUnit.getName().equals("")){
+		if(this.weightUnit.getId()!=Params.EMPTY_ID && this.weightUnit.getName().equals("")){
 			this.weightUnit=loadWeightUnit();
 		}
 		return this.weightUnit;
@@ -62,8 +62,7 @@ public class Weight extends Generic<Weight> implements Serializable{
 	}	
 	
 	private WeightUnit loadWeightUnit() throws SQLException{
-		WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();
-		return weightUnitBusiness.getWeightUnit(this.weightUnit.getId());
+		return new WeightUnitBusiness().getWeightUnit(this.weightUnit.getId());
 	}
 	
 }

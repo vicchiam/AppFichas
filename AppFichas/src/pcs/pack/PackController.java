@@ -57,11 +57,8 @@ public class PackController extends HttpServlet {
 		if(action.equals("list")){
 			this.showListPacks(request, response);
 		}
-		else if(action.equals("showNewPack")){
-			this.showNewPack(request, response);
-		}
-		else if(action.equals("showUpdatePack")){
-			this.showUpdatePack(request, response);
+		else if(action.equals("showFormPack")){
+			this.showFormPack(request, response);
 		}
 		else if(action.equals("savePack")){
 			this.savePack(request,response);
@@ -78,13 +75,16 @@ public class PackController extends HttpServlet {
 		else if(action.equals("showFormPackWeight")){
 			this.showFormPackWeight(request, response);
 		}
+		else if(action.equals("savePackWeight")){
+			this.savePackWeight(request,response);
+		}
 	}
 	
 	private void showListPacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Collection<Window> windows=new ArrayList<Window>();
 		windows.add(new Window("PACK",400,220,"Envases"));	
 		windows.add(new Window("PCKW",600,450,"Pesos vacios"));
-		windows.add(new Window("PCKWF",300,200,"Pesos vacio"));
+		windows.add(new Window("PCKWF",300,150,"Peso vacio",2));
 		request.setAttribute("windows", windows);
 				
 		String description=request.getParameter("f_description");
@@ -119,23 +119,20 @@ public class PackController extends HttpServlet {
 		}		
 	}
 	
-	private void showNewPack(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("pack", PackBuilder.pack().build());				
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"packs/formPack").forward(request, response);
-	}
-	
-	private void showUpdatePack(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void showFormPack(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
+		Pack pack=PackBuilder.pack().build();
 		
 		try {
-			Pack pack=new PackBusiness().getPack(Integer.parseInt(id));
+			if(id!=null && !id.equals("0")){
+				pack=new PackBusiness().getPack(Integer.parseInt(id));
+			}
 			request.setAttribute("pack", pack);
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"packs/formPack").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 			ServletUtils.showError(this,request, response, "Id pack error");
-		}		
-		
+		}				
 	}
 	
 	private void savePack(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -200,18 +197,23 @@ public class PackController extends HttpServlet {
 	}
 	
 	private void showListPackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String id=request.getParameter("id");
+		request.setAttribute("id", id);
+		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"packs/listPackWeight").forward(request, response);				
 	}
 	
 	private void showFormPackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
-		Weight weight=WeightBuilder.weight().build();
+		request.setAttribute("id", id);
 		
+		Weight weight=WeightBuilder.weight().build();
+				
 		try{
 			Collection<WeightUnit> weightUnits=new WeightUnitBusiness().listWeightUnits(Params.ACTIVE);
 			request.setAttribute("weightUnits", weightUnits);		
 			
-			if(id!=null){				
+			if(id!=null && !id.equals("0")){				
 				weight=new WeightBusiness().getWeight(Integer.parseInt(id));			
 			}
 			
@@ -223,5 +225,20 @@ public class PackController extends HttpServlet {
 		}
 	}
 		
+	private void savePackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String idPack=request.getParameter("idPack");
+		String weight=request.getParameter("weight");
+		String idWeight=request.getParameter("idWeight");
+		String idWeightUnit=request.getParameter("idWeightUnit");
+		
+		if(new PackBusiness().savePackWeight(Integer.parseInt(idPack),Integer.parseInt(idWeight),Float.parseFloat(weight),Integer.parseInt(idWeightUnit))){
+			response.getWriter().print("ok");
+		}
+		else{
+			response.getWriter().print("Error save PackWeight");
+		}
+		
+		
+	}
 
 }

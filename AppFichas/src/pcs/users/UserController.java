@@ -74,11 +74,8 @@ public class UserController extends HttpServlet {
 		if(action.equals("list")){
 			this.showListUsers(request, response);	
 		}		
-		else if(action.equals("showNewUser")){			
-			this.showNewUser(request, response);			
-		}
-		else if(action.equals("showUpdateUser")){
-			this.showUpdateUser(request, response);
+		else if(action.equals("showFormUser")){
+			this.showFormUser(request, response);
 		}
 		else if(action.equals("showChangePassword")){
 			this.showChangePassword(request, response);	
@@ -152,16 +149,14 @@ public class UserController extends HttpServlet {
 		
 	}
 	
-	private void showNewUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("user",UserBuilder.user().build());		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
-	}
-	
-	private void showUpdateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void showFormUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
+		User user=UserBuilder.user().build();
 		
 		try {
-			User user = new UserBusiness().getUser(Integer.parseInt(id));
+			if(id!=null && !user.equals("0")){
+				user = new UserBusiness().getUser(Integer.parseInt(id));
+			}
 			request.setAttribute("user",user);
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {

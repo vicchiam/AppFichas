@@ -93,22 +93,10 @@ function Search(){
 	});
 }
 
-function ShowNewUser(){
+function ShowFormUser(id){
 	var url="/AppFichas/Users";	
 	var data={
-			"action":"showNewUser"
-	};
-		
-	$.post(url,data,function(result){
-		$("#dynamic_USR").html(result);	
-		OpenWindow("USR");
-	});		
-}
-
-function ShowUpdateUser(id){
-	var url="/AppFichas/Users";	
-	var data={
-			"action":"showUpdateUser",
+			"action":"showFormUser",
 			"id":id
 	};
 		

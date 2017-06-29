@@ -35,7 +35,7 @@
 			<th>Email</th>
 			<th>Tipo</th>
 			<th></th>
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewUser()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormUser('0')" /></th>				
 		</tr>			
 		<c:forEach var="user" items="${requestScope.listUsers}">
 		<tr class="row">
@@ -49,7 +49,7 @@
 				<img title="Marcas Usuario" src="/AppFichas/resources/images/relation.png" class="img_button" onclick="ShowUserTrademarks('<c:out value = "${user.id}"/>','<c:out value ="${user.type}"/>')" />
 			</td>						
 			<td class="der">				
-				<img title="Editar Usuario" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateUser('<c:out value = "${user.id}"/>')" />
+				<img title="Editar Usuario" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormUser('<c:out value = "${user.id}"/>')" />
 				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateUser('<c:out value = "${user.id}"/>')" />
 			</td>
          	</tr>

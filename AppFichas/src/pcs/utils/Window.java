@@ -10,6 +10,7 @@ public class Window implements Serializable{
 	private int width;
 	private int height;
 	private String title;
+	private int level;
 		
 	public Window(String id, int width, int height, String title) {
 		super();
@@ -17,6 +18,16 @@ public class Window implements Serializable{
 		this.width = width;
 		this.height = height;
 		this.title = title;
+		this.level=1;
+	}
+	
+	public Window(String id, int width, int height, String title, int level) {
+		super();
+		this.id = id;
+		this.width = width;
+		this.height = height;
+		this.title = title;
+		this.level=level;
 	}
 
 	public String getId() {
@@ -49,6 +60,14 @@ public class Window implements Serializable{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}		
 
 }

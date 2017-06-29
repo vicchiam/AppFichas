@@ -20,7 +20,7 @@
 			<th>Imagen</th>
 			<th></th>
 			<th>Nombre</th>			
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewTrademark()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormTrademark()" /></th>				
 		</tr>			
 		<c:forEach var="trademark" items="${requestScope.listTrademarks}">
 		<tr class="row">
@@ -34,7 +34,7 @@
 				<c:out value = "${trademark.name}"/>
 			</td>
 			<td class="der">
-				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdateTrademark('<c:out value = "${trademark.id}"/>')" />
+				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormTrademark('<c:out value = "${trademark.id}"/>')" />
 				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateTrademark('<c:out value = "${trademark.id}"/>')" />
 			</td>
          </tr>

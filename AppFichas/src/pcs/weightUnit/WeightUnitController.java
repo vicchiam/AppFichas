@@ -51,11 +51,8 @@ public class WeightUnitController extends HttpServlet {
 		if(action.equals("list")){
 			this.showListWeightUnits(request, response);			
 		}		
-		else if(action.equals("showNewWeightUnit")){
-			this.showNewWeightUnit(request, response);
-		}
-		else if(action.equals("showUpdateWeightUnit")){
-			this.showUpdateWeightUnit(request, response);
+		else if(action.equals("showFormWeightUnit")){
+			this.showFormWeightUnit(request, response);
 		}
 		else if(action.equals("saveWeightUnit")){
 			this.saveWeightUnit(request, response);
@@ -93,16 +90,14 @@ public class WeightUnitController extends HttpServlet {
 		
 	}
 	
-	private void showNewWeightUnit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("weightUnit",WeightUnitBuilder.weightUnit().build());		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"weightUnits/formWeightUnit").forward(request, response);
-	}
-	
-	private void showUpdateWeightUnit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void showFormWeightUnit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
+		WeightUnit weightUnit=WeightUnitBuilder.weightUnit().build();
 		
 		try {
-			WeightUnit weightUnit = new WeightUnitBusiness().getWeightUnit(Integer.parseInt(id));
+			if(id!=null && !id.equals("0")){
+				weightUnit = new WeightUnitBusiness().getWeightUnit(Integer.parseInt(id));
+			}
 			request.setAttribute("weightUnit", weightUnit);
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"weightUnits/formWeightUnit").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {			
