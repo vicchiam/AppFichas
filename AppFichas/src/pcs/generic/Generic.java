@@ -3,12 +3,14 @@ package pcs.generic;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class Generic<T> {
+import pcs.utils.Params;
 
-	private int id;
+public abstract class Generic<T> {
+	
+	private int id;	
 	
 	public Generic(){
-		this.id=0;
+		this.id=Params.EMPTY_ID;		
 	}
 	
 	public Generic(int id){
@@ -21,10 +23,8 @@ public abstract class Generic<T> {
 
 	public void setId(int id) {
 		this.id = id;
-	}
+	}	
 	
 	public abstract T autoMake(ResultSet rs) throws SQLException;
-	
-	
-	
+		
 }

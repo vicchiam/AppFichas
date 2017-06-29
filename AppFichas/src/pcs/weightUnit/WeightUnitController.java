@@ -76,10 +76,7 @@ public class WeightUnitController extends HttpServlet {
 		request.setAttribute("f_state", state);
 		
 		try{
-			WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();
-			Collection<WeightUnit> list=weightUnitBusiness.listWeightUnits(Integer.parseInt(state));
-			
-			//list=Test.getWeigthUnits();
+			Collection<WeightUnit> list=new WeightUnitBusiness().listWeightUnits(Integer.parseInt(state));
 			
 			request.setAttribute("listWeightUnits", list);		
 			
@@ -91,13 +88,13 @@ public class WeightUnitController extends HttpServlet {
 			}	
 		} catch (NumberFormatException | SQLException e) {			
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showError(this, request, response, e.getMessage());
 		}
 		
 	}
 	
 	private void showNewWeightUnit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("weightUnit",new WeightUnit());		
+		request.setAttribute("weightUnit",WeightUnitBuilder.weightUnit().build());		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"weightUnits/formWeightUnit").forward(request, response);
 	}
 	
@@ -105,13 +102,12 @@ public class WeightUnitController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		try {
-			WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();
-			WeightUnit weightUnit = weightUnitBusiness.getWeightUnit(Integer.parseInt(id));
+			WeightUnit weightUnit = new WeightUnitBusiness().getWeightUnit(Integer.parseInt(id));
 			request.setAttribute("weightUnit", weightUnit);
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"weightUnits/formWeightUnit").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {			
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showError(this, request, response, e.getMessage());
 		}				
 	}
 	
@@ -121,10 +117,7 @@ public class WeightUnitController extends HttpServlet {
 		String conversion=request.getParameter("conversion");
 		
 		try{
-			WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();
-			
-			WeightUnit weightUnit=new WeightUnit(Integer.parseInt(id), name, Float.parseFloat(conversion));
-			weightUnit=weightUnitBusiness.saveWeightUnit(weightUnit);
+			WeightUnit weightUnit=new WeightUnitBusiness().saveWeightUnit(Integer.parseInt(id), name, Float.parseFloat(conversion));
 			if(weightUnit!=null){
 				response.getWriter().print("ok");			
 			}
@@ -133,7 +126,7 @@ public class WeightUnitController extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {			
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 	}
 	
@@ -141,8 +134,7 @@ public class WeightUnitController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		try{
-			WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();			
-			if(weightUnitBusiness.changeStateWeightUnit(Integer.parseInt(id))){
+			if(new WeightUnitBusiness().changeStateWeightUnit(Integer.parseInt(id))){
 				response.getWriter().print("ok");	
 			}
 			else{
@@ -150,23 +142,8 @@ public class WeightUnitController extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {			
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
-	}
-	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message, boolean isAjax) throws ServletException, IOException{
-		if(isAjax){
-			response.getWriter().print(message);
-		}
-		else{
-			request.setAttribute("Error", message);
-			ServletUtils.setResponseController(this, Params.JSP_PATH+"error").forward(request, response);
-		}
-	}
-	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
-		this.showError(request, response, message, false);
-	}
-	
+	}	
 
 }

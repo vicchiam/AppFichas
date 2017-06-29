@@ -12,9 +12,12 @@
 				</label>
 			</td>
 			<td>
-				<label for="f_apt">No aptos
-					<input type="checkbox" id="f_apt" name="f_apt" <c:if test = '${requestScope.f_apt==0}'>checked</c:if> />
-				</label>	
+				<select id="f_apt">
+					<option value="0">*</option>
+					<c:forEach var="aptName" items="${requestScope.aptNames}" varStatus="status">
+						<option value="<c:out value='${status.count}'/>" <c:if test = "${status.count==requestScope.f_apt}">selected</c:if> ><c:out value='${aptName}'/></option>
+					</c:forEach>
+				</select>
 			</td>			
 			<td class="der"><img src="/AppFichas/resources/images/search.png" class="img_button" onclick="Search()"/></td>
 		</tr>
@@ -22,22 +25,25 @@
 			<th>Description</th>
 			<th>Medidas</th>
 			<th>Peso vacio</th>						
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewUser()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowNewPack()" /></th>				
 		</tr>			
 		<c:forEach var="pack" items="${requestScope.listPacks}">
 		<tr class="row">
 			<td><c:out value = "${pack.description}"/></td>			
 			<td><c:out value = "${pack.mesure}"/></td>
-			<td><c:out value = "${pack.weight}"/></td>
+			<td>
+				<c:out value = ""/>
+				<img class="img_button float_right" src="/AppFichas/resources/images/user.png" onclick="ShowListPackWeight('<c:out value = "${pack.id}"/>')" />
+			</td>
 			<td class="der">				
 				<img title="Editar Envase" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowUpdatePack('<c:out value = "${pack.id}"/>')" />
-				<img title="Cambiar estado Envase" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStatePackr('<c:out value = "${pack.id}"/>')" />
+				<img title="Cambiar estado Envase" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStatePack('<c:out value = "${pack.id}"/>')" />
 			</td>
          </tr>
       	 </c:forEach>
-	</table>
-	<div class="script">
-		<script type="text/javascript">Init();</script> 
-	</div>
+	</table>	
+</div>
+<div class="script">
+	<script type="text/javascript">Init();</script> 
 </div>
 		

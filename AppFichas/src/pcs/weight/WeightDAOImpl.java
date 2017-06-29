@@ -24,7 +24,7 @@ public class WeightDAOImpl extends GenericDAO<Weight> implements WeightDAO{
 	public Weight getWeight(int id) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(id);
-		return this.genericDAO.get(SELECT_ID_SQL, params, new Weight());
+		return this.genericDAO.get(SELECT_ID_SQL, params, WeightBuilder.weight().build());
 	}
 
 	@Override

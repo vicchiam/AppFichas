@@ -82,8 +82,7 @@ public class TrademarkController extends HttpServlet {
 		}
 		else if(action.equals("deleteImage")){
 			this.deleteImage(request,response);
-		}
-		
+		}		
 	}
 	
 	private void showListTrademarks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -100,9 +99,7 @@ public class TrademarkController extends HttpServlet {
 		request.setAttribute("f_state", state);		
 		
 		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-			Collection<Trademark> list=new ArrayList<>();
-			list = trademarkBusiness.listTrademarks(name,Integer.parseInt(state));
+			Collection<Trademark> list=new TrademarkBusiness().listTrademarks(name,Integer.parseInt(state));
 			request.setAttribute("listTrademarks", list);		
 			if(request.getParameter("ajax")==null){
 				ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/trademark").forward(request, response);
@@ -112,13 +109,18 @@ public class TrademarkController extends HttpServlet {
 			}	
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			if(request.getParameter("ajax")==null){
+				ServletUtils.showError(this, request, response, e.getMessage());
+			}
+			else{
+				ServletUtils.showErrorAjax(request, response, e.getMessage());
+			}
 		}		
 			
 	}
 	
 	private void showNewTrademark(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("trademark",new Trademark());		
+		request.setAttribute("trademark",TrademarkBuilder.trademark().build());		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);
 	}
 	
@@ -126,14 +128,13 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");
 				
 		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-			Trademark trademark = trademarkBusiness.getTrademark(Integer.parseInt(id));
+			Trademark trademark = new TrademarkBusiness().getTrademark(Integer.parseInt(id));
 			request.setAttribute("trademark",trademark);		
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"trademarks/formTrademark").forward(request, response);			
 		}
 		catch (NumberFormatException | SQLException e) {		
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showError(this,request, response, e.getMessage());
 		}							
 		
 	}
@@ -143,8 +144,7 @@ public class TrademarkController extends HttpServlet {
 		String name=request.getParameter("name");
 		
 		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-			Trademark trademark=trademarkBusiness.saveTrademark(Integer.parseInt(id), name);
+			Trademark trademark=new TrademarkBusiness().saveTrademark(Integer.parseInt(id), name);
 			response.setContentType("text/html");
 			if(trademark!=null){
 				response.getWriter().print("ok");
@@ -155,7 +155,7 @@ public class TrademarkController extends HttpServlet {
 		}
 		catch (NumberFormatException | SQLException e) {	
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(), true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}		
 		
 	}
@@ -163,10 +163,9 @@ public class TrademarkController extends HttpServlet {
 	private void changeStateTrademark(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String id=request.getParameter("id");		
 		
-		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
+		try {			
 			response.setContentType("text/html");
-			if(trademarkBusiness.changeStateTrademark(Integer.parseInt(id))){
+			if(new TrademarkBusiness().changeStateTrademark(Integer.parseInt(id))){
 				response.getWriter().print("ok");			
 			}
 			else{
@@ -174,7 +173,7 @@ public class TrademarkController extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 	}
 	
@@ -198,15 +197,14 @@ public class TrademarkController extends HttpServlet {
 		request.setAttribute("f_state", state);	
 		
 		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
 			String json;
-			json = trademarkBusiness.autocompleteName(name, Integer.parseInt(state));
+			json = new TrademarkBusiness().autocompleteName(name, Integer.parseInt(state));
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().print(json);	
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}		
 		
 	}
@@ -219,8 +217,7 @@ public class TrademarkController extends HttpServlet {
 			try {
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(new ServletRequestContext(request));
 				
-				TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-				String resp=trademarkBusiness.uploadFile(multiparts, DIRECTORY);
+				String resp=new TrademarkBusiness().uploadFile(multiparts, DIRECTORY);
 				
 				PrintWriter out=response.getWriter();
 				out.println(this.doUploadMessage(resp));				
@@ -238,8 +235,7 @@ public class TrademarkController extends HttpServlet {
 		String id=request.getParameter("id");		
 		
 		try {
-			TrademarkBusiness trademarkBusiness=new TrademarkBusiness();
-			if(trademarkBusiness.deleteFile(DIRECTORY, Integer.parseInt(id))){
+			if(new TrademarkBusiness().deleteFile(DIRECTORY, Integer.parseInt(id))){
 				response.getWriter().print("ok");	
 			}
 			else{
@@ -247,7 +243,7 @@ public class TrademarkController extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {			
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 		
 	}
@@ -261,18 +257,6 @@ public class TrademarkController extends HttpServlet {
 		return html;		
 	} 	
 	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message, boolean isAjax) throws ServletException, IOException{
-		if(isAjax){
-			response.getWriter().print(message);
-		}
-		else{
-			request.setAttribute("Error", message);
-			ServletUtils.setResponseController(this, Params.JSP_PATH+"error").forward(request, response);
-		}
-	}
 	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
-		this.showError(request, response, message, false);
-	}
 
 }

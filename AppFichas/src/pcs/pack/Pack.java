@@ -3,36 +3,35 @@ package pcs.pack;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import pcs.generic.Generic;
+import pcs.weight.Weight;
 
 public class Pack extends Generic<Pack> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
+	public final static String[] aptNames={"No Apto", "Apto"};	
+	public final static int APT_EMPTY=0;
+	public final static int NO_APT=1;
+	public final static int APT=2;	
 
 	private String description;
-	private String mesure;
-	private String weight;
+	private Collection<Weight> weights;
 	private int apt;
 	private int state;
+	private String mesure;
 	
-	public Pack() {
-		super(0);
-		this.description = "";
-		this.mesure="";
-		this.weight = "";
-		this.apt = 0;
-		this.state = 0;
+	
+	public Pack(PackBuilder builder){
+		super(builder.id);
+		this.description=builder.description;
+		this.weights=builder.weights;
+		this.apt=builder.apt;
+		this.state=builder.state;
+		this.mesure=builder.mesure;
 	}
-	
-	public Pack(int id, String description, String mesure, String weight, int apt, int state) {
-		super(id);
-		this.description = description;
-		this.mesure=mesure;
-		this.weight = weight;
-		this.apt = apt;
-		this.state=state;
-	}	
 
 	public String getDescription() {
 		return description;
@@ -40,6 +39,14 @@ public class Pack extends Generic<Pack> implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}	
+
+	public Collection<Weight> getWeights() {
+		return weights;
+	}
+
+	public void setWeights(Collection<Weight> weights) {
+		this.weights = weights;
 	}
 
 	public String getMesure() {
@@ -48,14 +55,6 @@ public class Pack extends Generic<Pack> implements Serializable{
 
 	public void setMesure(String mesure) {
 		this.mesure = mesure;
-	}
-
-	public String getWeight() {
-		return weight;
-	}
-
-	public void setWeight(String weight) {
-		this.weight = weight;
 	}
 
 	public int getApt() {
@@ -73,6 +72,10 @@ public class Pack extends Generic<Pack> implements Serializable{
 	public void setState(int state) {
 		this.state = state;
 	}
+	
+	public String getAptName(){
+		return Pack.aptNames[this.apt-1];
+	}
 
 	@Override
 	public Pack autoMake(ResultSet rs) throws SQLException {
@@ -80,11 +83,17 @@ public class Pack extends Generic<Pack> implements Serializable{
 		int id=rs.getInt("id");
 		String description=rs.getString("description");
 		String mesure=rs.getString("mesure");
-		String weight=rs.getString("weight");
 		int apt=rs.getInt("apt");
 		int state=rs.getInt("state");				
 		
-		return new Pack(id, description, mesure, weight, apt, state);
+		return PackBuilder.pack()
+				.withId(id)
+				.withDescription(description)
+				.withApt(apt)
+				.withState(state)
+				.withMesure(mesure)
+				.build();
+				
 	}
 	
 	

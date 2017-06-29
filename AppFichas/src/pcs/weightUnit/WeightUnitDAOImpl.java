@@ -27,21 +27,21 @@ public class WeightUnitDAOImpl extends GenericDAO<WeightUnit> implements WeightU
 	public Collection<WeightUnit> listWeightUnits(int state) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(state);
-		return this.genericDAO.list(SELECT_SQL, params, new WeightUnit());
+		return this.genericDAO.list(SELECT_SQL, params, WeightUnitBuilder.weightUnit().build());
 	}
 
 	@Override
 	public WeightUnit getWeightUnit(int id) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(id);
-		return this.genericDAO.get(SELECT_ID_SQL, params, new WeightUnit());
+		return this.genericDAO.get(SELECT_ID_SQL, params, WeightUnitBuilder.weightUnit().build());
 	}
 
 	@Override
 	public WeightUnit getWeightUnit(String name) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(name);
-		return this.genericDAO.get(SELECT_NAME_SQL, params, new WeightUnit());
+		return this.genericDAO.get(SELECT_NAME_SQL, params, WeightUnitBuilder.weightUnit().build());
 	}
 
 	@Override

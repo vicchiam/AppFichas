@@ -15,5 +15,8 @@
 				<input type="button" class="button_green" value="Guardar" onclick="SaveTrademark()" />
 			</td>
 		</tr>
-	</table>
+	</table>	
+</div>
+<div class="script">
+	<script type="text/javascript">InitForm();</script> 
 </div>

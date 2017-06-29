@@ -15,26 +15,12 @@ public class Trademark extends Generic<Trademark> implements Serializable{
 	private String path;
 	private int state;
 	
-	public Trademark() {
-		super(0);		
-		this.name="";
-		this.path="";
-		this.state=1;
-	}
-	
-	public Trademark(int id, String name) {
-		super(id);		
-		this.name = name;
-		this.path="";
-		this.state=1;
-	}
-
-	public Trademark(int id, String name, String path, int state) {
-		super(id);		
-		this.name = name;		
-		this.path=path;
-		this.state=state;
-	}
+	public Trademark(TrademarkBuilder builder){
+		super(builder.id);
+		this.name=builder.name;
+		this.path=builder.path;
+		this.state=builder.state;
+	}	
 
 	public String getName() {
 		return name;
@@ -69,7 +55,12 @@ public class Trademark extends Generic<Trademark> implements Serializable{
 		String name=rs.getString("name");
 		String path=rs.getString("path");
 		int state=rs.getInt("state");
-		return new Trademark(id,name,path,state);
+		return TrademarkBuilder.trademark()
+				.withId(id)
+				.withName(name)
+				.withPath(path)
+				.withState(state)
+				.build();
 	}
 	
 }

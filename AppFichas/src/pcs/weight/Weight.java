@@ -6,7 +6,10 @@ import java.sql.SQLException;
 
 import pcs.generic.Generic;
 import pcs.interfacesDAO.WeightUnitDAO;
+import pcs.utils.Params;
 import pcs.weightUnit.WeightUnit;
+import pcs.weightUnit.WeightUnitBuilder;
+import pcs.weightUnit.WeightUnitBusiness;
 import pcs.weightUnit.WeightUnitDAOImpl;
 
 public class Weight extends Generic<Weight> implements Serializable{
@@ -16,24 +19,11 @@ public class Weight extends Generic<Weight> implements Serializable{
 	private float value;
 	private WeightUnit weightUnit;
 	
-	public Weight() {
-		super(0);		
-		this.value = 0.0f;
-		this.weightUnit = new WeightUnit();
-	}
-	
-	public Weight(int id, float value, WeightUnit weightUnit) {
-		super(id);
-		this.value = value;
-		this.weightUnit = weightUnit;
-	}
-	
-	public Weight(int id, float value, int idWeightUnit) throws SQLException {
-		super(id);
-		this.value = value;		
-		WeightUnitDAO weightUnitDAO=new WeightUnitDAOImpl();		
-		this.weightUnit = weightUnitDAO.getWeightUnit(idWeightUnit);
-	}
+	public Weight(WeightBuilder builder){
+		super(builder.id);
+		this.value=builder.value;
+		this.weightUnit=builder.weightUnit;
+	}	
 
 	public float getValue() {
 		return value;
@@ -43,8 +33,11 @@ public class Weight extends Generic<Weight> implements Serializable{
 		this.value = value;
 	}
 
-	public WeightUnit getWeightUnit() {
-		return weightUnit;
+	public WeightUnit getWeightUnit() throws SQLException {
+		if(this.getWeightUnit().getId()!=Params.EMPTY_ID && this.weightUnit.getName().equals("")){
+			this.weightUnit=loadWeightUnit();
+		}
+		return this.weightUnit;
 	}
 
 	public void setWeightUnit(WeightUnit weightUnit) {
@@ -55,10 +48,22 @@ public class Weight extends Generic<Weight> implements Serializable{
 	public Weight autoMake(ResultSet rs) throws SQLException {
 		int id=rs.getInt("id");
 		float value=rs.getFloat("value");
-		int idWeightUnit=rs.getInt("id_weight_unit");		
+		int idWeightUnit=rs.getInt("id_weight_unit");
 		
-		return new Weight(id,value,idWeightUnit);
-	}
+		WeightUnit weightUnit=WeightUnitBuilder.weightUnit()
+				.withId(idWeightUnit)
+				.build();
+		
+		return WeightBuilder.weight()
+				.withId(id)
+				.withValue(value)
+				.withWeightUnit(weightUnit)
+				.build();		
+	}	
 	
+	private WeightUnit loadWeightUnit() throws SQLException{
+		WeightUnitBusiness weightUnitBusiness=new WeightUnitBusiness();
+		return weightUnitBusiness.getWeightUnit(this.weightUnit.getId());
+	}
 	
 }

@@ -14,26 +14,12 @@ public class WeightUnit extends Generic<WeightUnit> implements Serializable{
 	private float conversionToKgm;
 	private int state;
 	
-	public WeightUnit(){
-		super(0);
-		this.name="";
-		this.conversionToKgm=0;
-		this.state=0;
-	}
-	
-	public WeightUnit(int id, String name, float conversionToKgm){
-		super(id);
-		this.name=name;
-		this.conversionToKgm=conversionToKgm;
-		this.state=1;
-	}
-	
-	public WeightUnit(int id, String name, float conversionToKgm, int state){
-		super(id);
-		this.name=name;
-		this.conversionToKgm=conversionToKgm;
-		this.state=state;
-	}
+	public WeightUnit(WeightUnitBuilder builder){
+		super(builder.id);
+		this.name=builder.name;
+		this.conversionToKgm=builder.conversionToKgm;
+		this.state=builder.state;
+	}	
 
 	public String getName() {
 		return name;
@@ -65,7 +51,12 @@ public class WeightUnit extends Generic<WeightUnit> implements Serializable{
 		String name=rs.getString("name");
 		float conversionToKgm=rs.getFloat("conversionToKgm");
 		int state=rs.getInt("state");
-		return new WeightUnit(id,name,conversionToKgm,state);
+		return WeightUnitBuilder.weightUnit()
+				.withId(id)
+				.withName(name)
+				.withConversionToKgm(conversionToKgm)
+				.withState(state)
+				.build();
 	}
 
 }

@@ -3,7 +3,10 @@ package pcs.pack;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.json.simple.JSONArray;
+
 import pcs.interfacesDAO.PackDAO;
+import pcs.utils.Params;
 
 public class PackBusiness {
 
@@ -21,9 +24,14 @@ public class PackBusiness {
 		return this.packDAO.getPack(id);
 	}
 	
-	public Pack savePack(int id, String description, String mesure, String weight, int apt) throws SQLException{
-		Pack pack=new Pack(id,description, mesure, weight, apt,1);
-		if(pack.getId()==0){
+	public Pack savePack(int id, String description, String mesure, int apt) throws SQLException{
+		Pack pack=PackBuilder.pack()
+				.withId(id)
+				.withDescription(description)
+				.withMesure(mesure)
+				.withApt(apt)
+				.build();
+		if(pack.getId()==Params.EMPTY_ID){
 			return this.packDAO.insertPack(pack);
 		}
 		else{
@@ -34,5 +42,15 @@ public class PackBusiness {
 	public boolean changeStatePack(int id) throws SQLException{
 		return this.packDAO.changeStatePack(id);
 	}	
+	
+	@SuppressWarnings("unchecked")
+	public String autocompleteDescription(String description , int apt, int state) throws SQLException {
+		JSONArray root = new JSONArray();
+		Collection<Pack> listPacks=this.packDAO.listPacks(description, apt, state);
+		for(Pack pack : listPacks){
+			root.add(pack.getDescription());
+		}
+		return root.toJSONString();	
+	}
 	
 }

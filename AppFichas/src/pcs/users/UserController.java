@@ -70,8 +70,7 @@ public class UserController extends HttpServlet {
 		String action=request.getParameter("action");		
 		
 		request.setAttribute("typeNames", User.typeNames);
-		request.setAttribute("stateNames", User.stateNames);
-		
+				
 		if(action.equals("list")){
 			this.showListUsers(request, response);	
 		}		
@@ -128,12 +127,11 @@ public class UserController extends HttpServlet {
 		if(type==null) type="0";
 		request.setAttribute("f_type", type);		
 		String state=request.getParameter("f_state");
-		if(state==null) state="1";
+		if(state==null) state=Params.ACTIVE+"";
 		request.setAttribute("f_state", state);		
 		
 		try{
-			UserBusiness userBusiness=new UserBusiness();
-			Collection<User> listUsers=userBusiness.listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
+			Collection<User> listUsers=new UserBusiness().listUsers(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
 			
 			request.setAttribute("listUsers", listUsers);
 			if(request.getParameter("ajax")==null){
@@ -144,13 +142,18 @@ public class UserController extends HttpServlet {
 			}	
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			if(request.getParameter("ajax")==null){
+				ServletUtils.showError(this, request, response, e.getMessage());
+			}
+			else{
+				ServletUtils.showErrorAjax(request, response, e.getMessage());
+			}
 		}
 		
 	}
 	
 	private void showNewUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.setAttribute("user",new User());		
+		request.setAttribute("user",UserBuilder.user().build());		
 		ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 	}
 	
@@ -158,13 +161,12 @@ public class UserController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		try {
-			UserBusiness userBusiness=new UserBusiness();
-			User user = userBusiness.getUser(Integer.parseInt(id));
+			User user = new UserBusiness().getUser(Integer.parseInt(id));
 			request.setAttribute("user",user);
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUser").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showError(this, request, response, e.getMessage());
 		}
 		
 	}
@@ -191,7 +193,7 @@ public class UserController extends HttpServlet {
 			ServletUtils.setResponseController(this, Params.JSP_PATH+"users/formUserTrademark").forward(request, response);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showError(this, request, response, e.getMessage());
 		}
 		
 	}
@@ -203,8 +205,7 @@ public class UserController extends HttpServlet {
 		String type=request.getParameter("type");
 		
 		try{
-			UserBusiness userBusiness=new UserBusiness();	
-			User user=userBusiness.saveUser(Integer.parseInt(id), userName, mail, Integer.parseInt(type));
+			User user=new UserBusiness().saveUser(Integer.parseInt(id), userName, mail, Integer.parseInt(type));
 			
 			response.setContentType("text/html");
 			if(user!=null){
@@ -215,7 +216,7 @@ public class UserController extends HttpServlet {
 			}	
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}		
 		
 	}
@@ -224,9 +225,8 @@ public class UserController extends HttpServlet {
 		String id=request.getParameter("id");
 		
 		try{		
-			UserBusiness userBusiness=new UserBusiness();
 			response.setContentType("text/html");
-			if(userBusiness.changeStateUser(Integer.parseInt(id))){
+			if(new UserBusiness().changeStateUser(Integer.parseInt(id))){
 				response.getWriter().print("ok");
 			}
 			else{
@@ -234,7 +234,7 @@ public class UserController extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 	}
 
@@ -243,9 +243,8 @@ public class UserController extends HttpServlet {
 		String password=request.getParameter("password");
 		
 		try{		
-			UserBusiness userBusiness=new UserBusiness();			
 			response.setContentType("text/html");
-			if(userBusiness.savePassword(Integer.parseInt(id), password)){
+			if(new UserBusiness().savePassword(Integer.parseInt(id), password)){
 				response.getWriter().print("ok");
 			}
 			else{
@@ -253,7 +252,7 @@ public class UserController extends HttpServlet {
 			}			
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(), true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 	}
 	
@@ -274,7 +273,7 @@ public class UserController extends HttpServlet {
 			response.getWriter().print(json);		
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 	}
 	
@@ -295,7 +294,7 @@ public class UserController extends HttpServlet {
 			response.getWriter().print(json);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 		
 	}
@@ -311,10 +310,10 @@ public class UserController extends HttpServlet {
 					response.getWriter().print("Error add User-Trademark");	
 				}
 			}
-		response.getWriter().print("ok");
+			response.getWriter().print("ok");
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage(),true);
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
 		
 	}
@@ -333,22 +332,8 @@ public class UserController extends HttpServlet {
 			response.getWriter().print("ok");
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
-			this.showError(request, response, e.getMessage());
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
 		}
-	}
-	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message, boolean isAjax) throws ServletException, IOException{
-		if(isAjax){
-			response.getWriter().print(message);
-		}
-		else{
-			request.setAttribute("Error", message);
-			ServletUtils.setResponseController(this, Params.JSP_PATH+"error").forward(request, response);
-		}
-	}
-	
-	private void showError(HttpServletRequest request, HttpServletResponse response, String message) throws ServletException, IOException{
-		this.showError(request, response, message, false);
-	}
+	}	
 	
 }

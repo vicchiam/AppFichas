@@ -165,11 +165,11 @@ function ChangeStateUser(id){
 			if(result=="ok"){
 				alert("Estado del usuario modificado correctamente");
 				Search();
+				CloseWindow("USR");
 			}
 			else{
 				alert(result);
-			}
-			CloseWindow("USR");
+			}			
 		});
 	}
 }
@@ -198,11 +198,11 @@ function Save(){
 		if(result=="ok"){
 			alert("Usuario guardado correctamente");
 			Search();
+			CloseWindow("USR");
 		}
 		else{
 			alert(result);
-		}
-		CloseWindow("USR");
+		}		
 	});	
 }
 
@@ -231,11 +231,11 @@ function SavePassword(){
 		if(result=="ok"){
 			alert("Contraseña modificada correctamente");
 			Search();
+			CloseWindow("USR");
 		}
 		else{
 			alert(result);
-		}
-		CloseWindow("USR");
+		}		
 	});	
 }
 

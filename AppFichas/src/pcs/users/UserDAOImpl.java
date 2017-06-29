@@ -29,7 +29,7 @@ public class UserDAOImpl implements UserDAO{
     	List<Object> params=new ArrayList<>();
     	params.add(userName);
     	params.add(password);
-    	return this.genericDAO.get(LOGIN_SQL, params, new User());
+    	return this.genericDAO.get(LOGIN_SQL, params, UserBuilder.user().build());
     }
     
     @Override
@@ -40,7 +40,7 @@ public class UserDAOImpl implements UserDAO{
 	public User getUser(int id) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(id);
-		return this.genericDAO.get(SELECT_ID_SQL, params, new User());
+		return this.genericDAO.get(SELECT_ID_SQL, params, UserBuilder.user().build());
 	}
 	
 	@Override
@@ -92,7 +92,7 @@ public class UserDAOImpl implements UserDAO{
 			where.add(" mail like ? ");
 			params.add(mail+"%");			
 		}
-		if(type>0){
+		if(type>User.TYPE_EMPTY){
 			where.add(" type=? ");
 			params.add(type);
 		}		
@@ -102,7 +102,7 @@ public class UserDAOImpl implements UserDAO{
 		}
 		sql+=" ORDER BY user";
 		
-		return this.genericDAO.list(sql, params, new User());		
+		return this.genericDAO.list(sql, params, UserBuilder.user().build());		
 	}
 
 	

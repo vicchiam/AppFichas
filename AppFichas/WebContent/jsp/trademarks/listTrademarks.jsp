@@ -41,3 +41,6 @@
       	</c:forEach>
 	</table>	
 </div>
+<div class="script">
+	<script type="text/javascript">Init();</script> 
+</div>

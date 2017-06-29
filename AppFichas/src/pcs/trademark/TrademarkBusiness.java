@@ -34,7 +34,10 @@ public class TrademarkBusiness {
 	}
 	
 	public Trademark saveTrademark(int id, String name) throws SQLException{
-		Trademark trademark=new Trademark(id,name);
+		Trademark trademark=TrademarkBuilder.trademark()
+				.withId(id)
+				.withName(name)
+				.build();
 		
 		if(trademark.getId()==0){
 			trademark=trademarkDAO.insertTrademark(trademark);

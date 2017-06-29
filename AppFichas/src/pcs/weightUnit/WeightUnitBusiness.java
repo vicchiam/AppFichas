@@ -25,7 +25,13 @@ public class WeightUnitBusiness {
 		return this.weightUnitDAO.getWeightUnit(name);
 	}
 	
-	public WeightUnit saveWeightUnit(WeightUnit weightUnit) throws SQLException{
+	public WeightUnit saveWeightUnit(int id, String name, float conversionToKgm) throws SQLException{
+		WeightUnit weightUnit=WeightUnitBuilder.weightUnit()
+				.withId(id)
+				.withName(name)
+				.withConversionToKgm(conversionToKgm)
+				.build();
+		
 		if(weightUnit.getId()==0){
 			return this.weightUnitDAO.createWeightUnit(weightUnit);
 		}

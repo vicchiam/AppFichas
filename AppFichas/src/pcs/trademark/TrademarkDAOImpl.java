@@ -36,7 +36,7 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	public Trademark getTrademark(int id) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(id);
-		return this.genericDAO.get(SELECT_ID_SQL, params, new Trademark());
+		return this.genericDAO.get(SELECT_ID_SQL, params, TrademarkBuilder.trademark().build());
 	}
 
 	@Override
@@ -72,14 +72,14 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 	public Collection<Trademark> listTrademarksForUser(int idUser) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(idUser);
-		return this.genericDAO.list(SELECT_USER_TRADEMARK_SQL, params, new Trademark());
+		return this.genericDAO.list(SELECT_USER_TRADEMARK_SQL, params, TrademarkBuilder.trademark().build());
 	}
 	
 	@Override
 	public Collection<Trademark> listTrademarksForUserNot(int idUser) throws SQLException {
 		List<Object> params=new ArrayList<>();
 		params.add(idUser);
-		return this.genericDAO.list(SELECT_NOT_USER_TRADEMARK_SQL, params, new Trademark());
+		return this.genericDAO.list(SELECT_NOT_USER_TRADEMARK_SQL, params, TrademarkBuilder.trademark().build());
 	}
 	
 	@Override
@@ -114,7 +114,7 @@ public class TrademarkDAOImpl implements TrademarkDAO{
 		}
 		sql+=" ORDER BY name";
 		
-		return this.genericDAO.list(sql, params, new Trademark());
+		return this.genericDAO.list(sql, params, TrademarkBuilder.trademark().build());
 	}
 
 }

@@ -80,11 +80,11 @@ function SaveTrademark(){
 		if(result=="ok"){
 			alert("Marca guardada correctamente");
 			Search();
+			CloseWindow("TMK");
 		}
 		else{
 			alert(result);
-		}
-		CloseWindow("TMK");
+		}		
 	});	
 }
 
@@ -100,11 +100,11 @@ function ChangeStateTrademark(id){
 			if(result=="ok"){
 				alert("Estado modificado correctamente");
 				Search();
+				CloseWindow("TMK");
 			}
 			else{
 				alert(result);
-			}
-			CloseWindow("TMK");
+			}			
 		});	
 	}
 }
@@ -126,8 +126,8 @@ function ShowImageUpdater(id,path){
 function CallbackImageUpdater(result){
 	if(result=="ok"){
 		alert("Imagen guardada");
-		CloseWindow("IMG");
 		Search();
+		CloseWindow("IMG");
 	}
 	else{
 		alert("result");

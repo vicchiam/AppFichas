@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.json.simple.JSONArray;
 
 import pcs.interfacesDAO.UserDAO;
-
+import pcs.utils.Params;
 
 public class UserBusiness {
 	
@@ -29,12 +29,13 @@ public class UserBusiness {
 	}
 	
 	public User saveUser(int id, String userName, String mail, int type) throws SQLException{
-		User user=new User();
-		user.setId(id);
-		user.setUser(userName);
-		user.setMail(mail);
-		user.setType(type);	
-		if(user.getId()==0){
+		User user=UserBuilder.user()
+				.withId(id)
+				.withUser(userName)
+				.withMail(mail)
+				.withType(type)
+				.build();
+		if(user.getId()==Params.EMPTY_ID){
 			user=this.userDAO.insertUser(user);
 		}
 		else{

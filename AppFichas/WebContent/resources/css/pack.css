@@ -1,1 +1,32 @@
-@CHARSET "ISO-8859-1";
+
+#emptyWeight{
+	width:95%;
+	margin:auto;
+	height:420px;
+	overflow:auto;
+}
+
+
+#emptyWeight table{
+	width:100%;	
+}
+
+#emptyWeight table th{
+	font-weight:bold;
+	padding:2px;
+	border-bottom:1px solid #ccc;
+}
+
+#emptyWeight table td{
+	padding:2px;
+	border-bottom:1px solid #ccc;
+}
+
+#emptyWeight .img_button{
+	width:20px;
+	cursor:pointer;
+}
+
+#emptyWeight table tr:nth-child(even){
+	background-color:#f8f8f8;
+}
