@@ -7,6 +7,8 @@ import org.json.simple.JSONArray;
 
 import pcs.interfacesDAO.PackDAO;
 import pcs.utils.Params;
+import pcs.weight.Weight;
+import pcs.weight.WeightBusiness;
 
 public class PackBusiness {
 
@@ -53,9 +55,19 @@ public class PackBusiness {
 		return root.toJSONString();	
 	}
 	
-	public boolean savePackWeight(int idPack, int idWeight, float value, int idWeightUnit){
-		
-		return false;
+	public boolean savePackWeight(int idPack, int idWeight, float value, int idWeightUnit) throws SQLException{
+		if(idWeight==0){
+			Weight weight=new WeightBusiness().insertWeight(value, idWeightUnit);
+			return this.packDAO.insertPackWeight(idPack, weight.getId());
+		}
+		else{
+			new WeightBusiness().updateWeight(idWeight, value, idWeightUnit);
+			return true;
+		}
+	}
+	
+	public boolean deletePackWeight(int idWeight) throws SQLException{
+		return new WeightBusiness().deleteWeight(idWeight);
 	}
 	
 }

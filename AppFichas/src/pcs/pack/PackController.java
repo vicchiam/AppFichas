@@ -78,12 +78,15 @@ public class PackController extends HttpServlet {
 		else if(action.equals("savePackWeight")){
 			this.savePackWeight(request,response);
 		}
+		else if(action.equals("deletePackWeight")){
+			this.deletePackWeight(request,response);
+		}
 	}
 	
 	private void showListPacks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Collection<Window> windows=new ArrayList<Window>();
 		windows.add(new Window("PACK",400,220,"Envases"));	
-		windows.add(new Window("PCKW",600,450,"Pesos vacios"));
+		windows.add(new Window("PCKW",600,450,"Pesos vacios", Window.DEFAULT_LEVEL, Window.NO_CLOSE_BUTTON));
 		windows.add(new Window("PCKWF",300,150,"Peso vacio",2));
 		request.setAttribute("windows", windows);
 				
@@ -198,9 +201,15 @@ public class PackController extends HttpServlet {
 	
 	private void showListPackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String id=request.getParameter("id");
-		request.setAttribute("id", id);
-		
-		ServletUtils.setResponseController(this, Params.JSP_PATH+"packs/listPackWeight").forward(request, response);				
+		request.setAttribute("id", id);		
+		try {
+			Collection<Weight> weights = new WeightBusiness().listWeightsFromPack(Integer.parseInt(id));
+			request.setAttribute("weights", weights);			
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"packs/listPackWeight").forward(request, response);
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
+		}						
 	}
 	
 	private void showFormPackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -211,7 +220,7 @@ public class PackController extends HttpServlet {
 				
 		try{
 			Collection<WeightUnit> weightUnits=new WeightUnitBusiness().listWeightUnits(Params.ACTIVE);
-			request.setAttribute("weightUnits", weightUnits);		
+			request.setAttribute("weightUnits", weightUnits);			
 			
 			if(id!=null && !id.equals("0")){				
 				weight=new WeightBusiness().getWeight(Integer.parseInt(id));			
@@ -226,18 +235,38 @@ public class PackController extends HttpServlet {
 	}
 		
 	private void savePackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String idPack=request.getParameter("idPack");
-		String weight=request.getParameter("weight");
-		String idWeight=request.getParameter("idWeight");
-		String idWeightUnit=request.getParameter("idWeightUnit");
+		String idPack=request.getParameter("id_pack");
+		String value=request.getParameter("value");
+		String idWeight=request.getParameter("id_weight");
+		String idWeightUnit=request.getParameter("id_weightUnit");
 		
-		if(new PackBusiness().savePackWeight(Integer.parseInt(idPack),Integer.parseInt(idWeight),Float.parseFloat(weight),Integer.parseInt(idWeightUnit))){
-			response.getWriter().print("ok");
-		}
-		else{
-			response.getWriter().print("Error save PackWeight");
-		}
+		try {
+			if(new PackBusiness().savePackWeight(Integer.parseInt(idPack),Integer.parseInt(idWeight),Float.parseFloat(value),Integer.parseInt(idWeightUnit))){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("Error save PackWeight");
+			}
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
+		}		
+	}
+	
+	private void deletePackWeight(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String idWeight=request.getParameter("id_weight");
 		
+		try {
+			if(new PackBusiness().deletePackWeight(Integer.parseInt(idWeight))){
+				response.getWriter().print("ok");
+			}
+			else{
+				response.getWriter().print("Error delete PackWeight");
+			}
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
+		}
 		
 	}
 

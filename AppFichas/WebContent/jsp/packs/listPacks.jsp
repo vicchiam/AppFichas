@@ -32,8 +32,8 @@
 			<td><c:out value = "${pack.description}"/></td>			
 			<td><c:out value = "${pack.mesure}"/></td>
 			<td>
-				<c:out value = ""/>
-				<img class="img_button float_right" src="/AppFichas/resources/images/user.png" onclick="ShowListPackWeight('<c:out value = "${pack.id}"/>')" />
+				<c:out value = "${pack.weightNames }"/>
+				<img class="img_button float_right" src="/AppFichas/resources/images/view.png" onclick="ShowListPackWeight('<c:out value = "${pack.id}"/>')" />
 			</td>
 			<td class="der">				
 				<img title="Editar Envase" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormPack('<c:out value = "${pack.id}"/>')" />

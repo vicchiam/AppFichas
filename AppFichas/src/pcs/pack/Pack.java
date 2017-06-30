@@ -3,10 +3,13 @@ package pcs.pack;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import pcs.generic.Generic;
 import pcs.weight.Weight;
+import pcs.weight.WeightBusiness;
 
 public class Pack extends Generic<Pack> implements Serializable{
 
@@ -41,7 +44,10 @@ public class Pack extends Generic<Pack> implements Serializable{
 		this.description = description;
 	}	
 
-	public Collection<Weight> getWeights() {
+	public Collection<Weight> getWeights() throws SQLException {
+		if(this.weights==null){
+			this.reloadWeights();
+		}
 		return weights;
 	}
 
@@ -75,6 +81,20 @@ public class Pack extends Generic<Pack> implements Serializable{
 	
 	public String getAptName(){
 		return Pack.aptNames[this.apt-1];
+	}
+	
+	public void reloadWeights() throws SQLException{
+		this.weights=new WeightBusiness().listWeightsFromPack(super.getId());
+	}
+	
+	public String getWeightNames() throws SQLException{
+		this.getWeights();
+		
+		List<String> names=new ArrayList<>();
+		for(Weight weight : this.weights){
+			names.add(weight.getValue()+" "+weight.getWeightUnit().getName());
+		}
+		return String.join(" + ", names);			
 	}
 
 	@Override

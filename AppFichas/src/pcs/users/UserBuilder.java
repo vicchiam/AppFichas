@@ -4,7 +4,7 @@ import pcs.utils.Params;
 
 public class UserBuilder {
 	
-	int id=0;
+	int id=Params.EMPTY_ID;
 	String user="";
 	String mail="";
 	String password="";

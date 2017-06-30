@@ -2,6 +2,7 @@ package pcs.weight;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import pcs.generic.GenericDAO;
@@ -9,10 +10,46 @@ import pcs.interfacesDAO.WeightDAO;
 
 public class WeightDAOImpl extends GenericDAO<Weight> implements WeightDAO{
 	
-	private String SELECT_ID_SQL="SELECT id, value, id_weight_unit FROM weight WHERE id=?";
+	private String SELECT_ID_SQL=""
+			+ "SELECT "
+			+ "	w.id, "
+			+ "	w.value, "
+			+ "	wu.id as id_weight_unit, "
+			+ "	wu.name, "
+			+ "	wu.conversionToKgm, "
+			+ "	wu.state "
+			+ "FROM "
+			+ "	weight w "
+			+ "	LEFT JOIN "
+			+ "	weight_unit wu "
+			+ "		ON "
+			+ "			wu.id=w.id_weight_unit and"
+			+ "			wu.state=1 "
+			+ "WHERE "
+			+ "	w.id=?";
 	private String INSERT_SQL="INSERT INTO weight (value,id_weight_unit) VALUES(?,?)";
 	private String UPDATE_SQL="UPDATE weight SET value=?, id_weight_unit=? WHERE id=?";
 	private String DELETE_SQL="DELETE FROM weight WHERE id=?";
+	private String SELECT_PACK_WEIGHT_ID=""
+			+ "SELECT"
+			+ "	w.id, "
+			+ "	w.value, "
+			+ "	wu.id as id_weight_unit, "
+			+ "	wu.name, "
+			+ "	wu.conversionToKgm, "
+			+ "	wu.state "
+			+ "FROM "
+			+ "	pack_weight pw "
+			+ "	LEFT JOIN "
+			+ "	weight w "
+			+ "		ON "
+			+ "			w.id=pw.id_weight "
+			+ "	LEFT JOIN weight_unit wu "
+			+ "		ON "
+			+ "			wu.id=w.id_weight_unit and"
+			+ "			wu.state=1 "
+			+ "WHERE "
+			+ "	pw.id_pack=?";
 	
 	private GenericDAO<Weight> genericDAO;
 	
@@ -28,7 +65,7 @@ public class WeightDAOImpl extends GenericDAO<Weight> implements WeightDAO{
 	}
 
 	@Override
-	public Weight createWeight(Weight weight) throws SQLException {		
+	public Weight insertWeight(Weight weight) throws SQLException {		
 		List<Object> params=new ArrayList<>();
 		params.add(weight.getValue());
 		params.add(weight.getWeightUnit().getId());
@@ -40,6 +77,7 @@ public class WeightDAOImpl extends GenericDAO<Weight> implements WeightDAO{
 		List<Object> params=new ArrayList<>();
 		params.add(weight.getValue());
 		params.add(weight.getWeightUnit().getId());
+		params.add(weight.getId());
 		return this.genericDAO.update(UPDATE_SQL, params, weight);
 	}
 
@@ -48,6 +86,13 @@ public class WeightDAOImpl extends GenericDAO<Weight> implements WeightDAO{
 		List<Object> params=new ArrayList<>();
 		params.add(id);
 		return this.genericDAO.operation(DELETE_SQL, params);
+	}
+	
+	@Override
+	public Collection<Weight> listWeightsFromPack(int idPack) throws SQLException{
+		List<Object> params=new ArrayList<>();
+		params.add(idPack);
+		return this.genericDAO.list(SELECT_PACK_WEIGHT_ID, params, WeightBuilder.weight().build());
 	}
 
 }

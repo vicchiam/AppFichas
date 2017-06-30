@@ -5,12 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import pcs.generic.Generic;
-import pcs.interfacesDAO.WeightUnitDAO;
-import pcs.utils.Params;
 import pcs.weightUnit.WeightUnit;
 import pcs.weightUnit.WeightUnitBuilder;
-import pcs.weightUnit.WeightUnitBusiness;
-import pcs.weightUnit.WeightUnitDAOImpl;
 
 public class Weight extends Generic<Weight> implements Serializable{
 
@@ -34,9 +30,6 @@ public class Weight extends Generic<Weight> implements Serializable{
 	}
 
 	public WeightUnit getWeightUnit() throws SQLException {
-		if(this.weightUnit.getId()!=Params.EMPTY_ID && this.weightUnit.getName().equals("")){
-			this.weightUnit=loadWeightUnit();
-		}
 		return this.weightUnit;
 	}
 
@@ -48,10 +41,17 @@ public class Weight extends Generic<Weight> implements Serializable{
 	public Weight autoMake(ResultSet rs) throws SQLException {
 		int id=rs.getInt("id");
 		float value=rs.getFloat("value");
+		
 		int idWeightUnit=rs.getInt("id_weight_unit");
+		String name=rs.getString("name");
+		float conversion=rs.getFloat("conversionToKgm");
+		int state=rs.getInt("state");		
 		
 		WeightUnit weightUnit=WeightUnitBuilder.weightUnit()
 				.withId(idWeightUnit)
+				.withName(name)
+				.withConversionToKgm(conversion)
+				.withState(state)
 				.build();
 		
 		return WeightBuilder.weight()
@@ -60,9 +60,5 @@ public class Weight extends Generic<Weight> implements Serializable{
 				.withWeightUnit(weightUnit)
 				.build();		
 	}	
-	
-	private WeightUnit loadWeightUnit() throws SQLException{
-		return new WeightUnitBusiness().getWeightUnit(this.weightUnit.getId());
-	}
 	
 }

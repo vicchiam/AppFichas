@@ -16,5 +16,9 @@ public interface PackDAO {
 	public Pack updatePack(Pack pack) throws SQLException;
 	
 	public boolean changeStatePack(int id) throws SQLException;
+	
+	public boolean insertPackWeight(int idPack, int idWeight) throws SQLException;
+	
+	public boolean deletePackWeight(int idPack, int idWeight) throws SQLException;
 
 }

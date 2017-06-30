@@ -1,6 +1,5 @@
 package pcs.pack;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import pcs.utils.Params;
@@ -13,7 +12,7 @@ public class PackBuilder {
 	int apt=Pack.APT_EMPTY;
 	int state=Params.ACTIVE;
 	String mesure="";
-	Collection<Weight> weights=new ArrayList<>();
+	Collection<Weight> weights=null;
 	
 	public static PackBuilder pack(){
 		return new PackBuilder();

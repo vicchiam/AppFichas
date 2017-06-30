@@ -15,7 +15,9 @@ public class PackDAOImpl implements PackDAO{
 	private String INSERT_SQL="INSERT INTO pack (description, mesure, apt) VALUES(?,?,?)";
 	private String UPDATE_SQL="UPDATE pack SET description=?, mesure=?, apt=? WHERE id=?";
 	private String UPDATE_STATE_SQL="UPDATE pack SET state=if(state=0,1,0) WHERE id=?";
-
+	private String INSERT_PACK_WEIGHT="INSERT INTO pack_weight (id_pack, id_weight) VALUES(?,?)";
+	private String DELETE_PACK_WEIGHT="DELETE FROM pack_weight WHERE id_pack=? and id_weight=?";
+	
 	private GenericDAO<Pack> genericDAO;
 	
 	public PackDAOImpl(){
@@ -58,6 +60,20 @@ public class PackDAOImpl implements PackDAO{
 		List<Object> params=new ArrayList<>();
 		params.add(id);
 		return this.genericDAO.operation(UPDATE_STATE_SQL, params);
+	}	
+	
+	public boolean insertPackWeight(int idPack, int idWeight) throws SQLException{
+		List<Object> params=new ArrayList<>();
+		params.add(idPack);
+		params.add(idWeight);
+		return this.genericDAO.operation(INSERT_PACK_WEIGHT, params);
+	}
+	
+	public boolean deletePackWeight(int idPack, int idWeight) throws SQLException{
+		List<Object> params=new ArrayList<>();
+		params.add(idPack);
+		params.add(idWeight);
+		return this.genericDAO.operation(DELETE_PACK_WEIGHT, params);
 	}
 
 	private Collection<Pack> filter(String description, int apt, int state) throws SQLException{

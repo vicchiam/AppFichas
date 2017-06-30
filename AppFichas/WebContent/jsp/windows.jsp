@@ -13,7 +13,9 @@
 			">
 		<div class="window_head">
 			<span class="window_title"><c:out value='${window.title}' /></span>
-			<img src="/AppFichas/resources/images/close.png" onclick="CloseWindow('<c:out value='${window.id}' />')" />
+			<c:if test = '${window.viewCloseButton==0}'>
+				<img src="/AppFichas/resources/images/close.png" onclick="CloseWindow('<c:out value='${window.id}' />')" />
+			</c:if>
 		</div>
 		<div class="dynamic" id="dynamic_<c:out value='${window.id}' />"></div>
 	</div>	

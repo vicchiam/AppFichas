@@ -141,6 +141,11 @@ function ShowListPackWeight(id_pack){
 	});	
 }
 
+function ReloadListPacks(){
+	Search();
+	CloseWindow("PCKW");
+}
+
 function SearchPackWeight(id_pack){
 	var url="/AppFichas/Packs";	
 	var data={
@@ -153,10 +158,11 @@ function SearchPackWeight(id_pack){
 	});	
 }
 
-function ShowFormPackWeight(){
+function ShowFormPackWeight(id){
 	var url="/AppFichas/Packs";	
 	var data={
-			"action":"showFormPackWeight"
+			"action":"showFormPackWeight",
+			"id":id
 	};
 		
 	$.post(url,data,function(result){
@@ -168,26 +174,57 @@ function ShowFormPackWeight(){
 function SavePackWeight(){
 	var id_pack=$("#_idPack").val();
 	var id_weight=$("#_idWeight").val();
-	var weight=$("#weightValue").val();
+	var value=$("#weightValue").val();
+	value=value.replace(",",".");
+	if(isNaN(value)){
+		alert("Número incorrecto");
+		return;
+	}
+	
 	var id_weightUnit=$("#weightUnit").val();
 	
 	var url="/AppFichas/Packs";
 	var data={
 			"action":"savePackWeight",
-			"id":id_pack,
+			"id_pack":id_pack,
 			"id_weight":id_weight,
-			"weight":weight,
+			"value":value,
 			"id_weightUnit":id_weightUnit
 	}
 		
 	$.post(url,data,function(result){
 		if(result=="ok"){
-			SearchPackWeight(data.id_pack);
+			alert("Guardado correctamente");
+			SearchPackWeight(id_pack);
+			CloseWindow("PCKWF");			
 		}
 		else{
 			alert(result);
 		}
 	});	
+}
+
+function DeletePackWeight(id_weight){
+	if(confirm("¿Seguro que lo deseas eliminar?")){
+		var id_pack=$("#_idPack").val();
+		
+		var url="/AppFichas/Packs";
+		var data={
+				"action":"deletePackWeight",		
+				"id_weight":id_weight
+		}
+			
+		$.post(url,data,function(result){
+			if(result=="ok"){
+				alert("Eliminado correctamente");
+				SearchPackWeight(id_pack);
+				CloseWindow("PCKWF");			
+			}
+			else{
+				alert(result);
+			}
+		});	
+	}
 }
 
 
