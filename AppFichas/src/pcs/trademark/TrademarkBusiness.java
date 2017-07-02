@@ -39,7 +39,7 @@ public class TrademarkBusiness {
 				.withName(name)
 				.build();
 		
-		if(trademark.getId()==0){
+		if(trademark.getId()==Params.EMPTY_ID){
 			trademark=trademarkDAO.insertTrademark(trademark);
 		}
 		else{

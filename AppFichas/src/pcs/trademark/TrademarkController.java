@@ -92,7 +92,7 @@ public class TrademarkController extends HttpServlet {
 		request.setAttribute("f_name", name);
 		
 		String state=request.getParameter("f_state");
-		if(state==null) state="1";
+		if(state==null) state=Params.ACTIVE+"";
 		request.setAttribute("f_state", state);		
 		
 		try {

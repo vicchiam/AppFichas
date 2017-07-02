@@ -22,20 +22,20 @@
 			<th>Nombre</th>			
 			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormTrademark()" /></th>				
 		</tr>			
-		<c:forEach var="trademark" items="${requestScope.listTrademarks}">
+		<c:forEach var="language" items="${requestScope.listLanguages}">
 		<tr class="row">
 			<td class="center">
-				<img class="trademark_image" src="/AppFichas<c:out value = "${trademark.path}"/>?<c:out value='${dateValue.time}'/>" onclick="ShowImageUpdater('<c:out value = "${trademark.id}"/>','<c:out value = "${trademark.path}"/>')"/>
+				<img class="language_image" src="/AppFichas<c:out value = "${language.path}"/>?<c:out value='${dateValue.time}'/>" onclick="ShowImageUpdater('<c:out value = "${language.id}"/>','<c:out value = "${language.path}"/>')"/>
 			</td>
 			<td class="center">
-				<img title="Eliminar imagen" src="/AppFichas/resources/images/delete_image.png" class="img_button" onclick="DeleteImage('<c:out value = "${trademark.id}"/>')" />
+				<img title="Eliminar imagen" src="/AppFichas/resources/images/delete_image.png" class="img_button" onclick="DeleteImage('<c:out value = "${language.id}"/>')" />
 			</td>
 			<td>
-				<c:out value = "${trademark.name}"/>
+				<c:out value = "${language.name}"/>
 			</td>
 			<td class="der">
-				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormTrademark('<c:out value = "${trademark.id}"/>')" />
-				<img title="Cambiar estado marca" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateTrademark('<c:out value = "${trademark.id}"/>')" />
+				<img title="Editar marca" src="/AppFichas/resources/images/edit.png" class="img_button" onclick="ShowFormLanguage('<c:out value = "${trademark.id}"/>')" />
+				<img title="Cambiar estado Usuario" src="/AppFichas/resources/images/recycle.png" class="img_button" onclick="ChangeStateLanguage('<c:out value = "${trademark.id}"/>')" />
 			</td>
          </tr>
       	</c:forEach>

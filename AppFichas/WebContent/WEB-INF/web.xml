@@ -39,7 +39,7 @@
     <display-name>PackController</display-name>
     <servlet-name>PackController</servlet-name>
     <servlet-class>pcs.pack.PackController</servlet-class>
-  </servlet>  
+  </servlet>
   <servlet-mapping>
     <servlet-name>PackController</servlet-name>
     <url-pattern>/Packs</url-pattern>
@@ -54,11 +54,20 @@
     <servlet-name>WeightUnitController</servlet-name>
     <url-pattern>/WeightUnits</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>LanguageController</display-name>
+    <servlet-name>LanguageController</servlet-name>
+    <servlet-class>pcs.language.LanguageController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LanguageController</servlet-name>
+    <url-pattern>/Languages</url-pattern>
+  </servlet-mapping>
   <resource-ref>
     <description>DB Connection</description>
     <res-ref-name>jdbc/AppFichasDB</res-ref-name>
     <res-type>javax.sql.DataSource</res-type>
     <res-auth>Container</res-auth>
-  </resource-ref>
-  
+  </resource-ref>  
 </web-app>

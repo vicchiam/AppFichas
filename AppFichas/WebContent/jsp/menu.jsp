@@ -9,6 +9,7 @@
 				<ul class="level2">
 					<li><a class="level2" href="/AppFichas/Users?action=list">Usuarios</a></li>
 					<li><a class="level2" href="/AppFichas/Trademarks?action=list">Marcas</a></li>
+					<li><a class="level2" href="/AppFichas/Languages?action=list">Idiomas</a></li>
 					<li><a class="level2" href="#">Centros</a></li>
 					<li><a class="level2" href="/AppFichas/Packs?action=list">Envase</a></li>
 					<li><a class="level2" href="#">Embalaje</a></li>

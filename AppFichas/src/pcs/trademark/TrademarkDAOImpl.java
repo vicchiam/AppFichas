@@ -10,16 +10,16 @@ import pcs.interfacesDAO.TrademarkDAO;
 
 public class TrademarkDAOImpl implements TrademarkDAO{
 	
-	public static String SELECT_SQL="SELECT id, name, path, state FROM trademark t  ";
-	public static String SELECT_ID_SQL="SELECT id, name, path, state FROM trademark WHERE id=?";
-	public static String INSERT_SQL="INSERT INTO trademark (name,path) VALUES(?,NULL)";
-	public static String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
-	public static String UPDATE_STATE_SQL="UPDATE trademark SET state=if(state=0,1,0) WHERE id=?";
-	public static String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
-	public static String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE t.state=1 AND ut.id_user=? order by t.name";
-	public static String SELECT_NOT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM trademark t WHERE t.state=1 AND t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?) order by t.name";
-	public static String INSERT_USER_TRADEMARK_SQL="INSERT INTO user_trademark (id_user,id_trademark) VALUES(?,?)";
-	public static String DELETE_USER_TRADEMARK_SQL="DELETE FROM user_trademark WHERE id_user=? and id_trademark=?";
+	private String SELECT_SQL="SELECT id, name, path, state FROM trademark t  ";
+	private String SELECT_ID_SQL="SELECT id, name, path, state FROM trademark WHERE id=?";
+	private String INSERT_SQL="INSERT INTO trademark (name,path) VALUES(?,NULL)";
+	private String UPDATE_SQL="UPDATE trademark SET name=? WHERE id=?";
+	private String UPDATE_STATE_SQL="UPDATE trademark SET state=if(state=0,1,0) WHERE id=?";
+	private String UPDATE_PATH_SQL="UPDATE trademark SET path=? WHERE id=?";
+	private String SELECT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM user_trademark ut LEFT JOIN trademark t ON ut.id_trademark=t.id WHERE t.state=1 AND ut.id_user=? order by t.name";
+	private String SELECT_NOT_USER_TRADEMARK_SQL="SELECT t.id, t.name, t.path, t.state FROM trademark t WHERE t.state=1 AND t.id not in (SELECT id_trademark FROM user_trademark WHERE id_user=?) order by t.name";
+	private String INSERT_USER_TRADEMARK_SQL="INSERT INTO user_trademark (id_user,id_trademark) VALUES(?,?)";
+	private String DELETE_USER_TRADEMARK_SQL="DELETE FROM user_trademark WHERE id_user=? and id_trademark=?";
 	
 	private GenericDAO<Trademark> genericDAO;
 	

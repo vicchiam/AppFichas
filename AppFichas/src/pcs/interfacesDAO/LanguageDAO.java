@@ -16,5 +16,7 @@ public interface LanguageDAO {
 	public Language updateLanguage(Language language) throws SQLException;
 	
 	public boolean changeStateLanguage(int id) throws SQLException;
+	
+	public boolean updatePathLanguage(int id, String path) throws SQLException;
 
 }
