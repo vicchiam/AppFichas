@@ -5,16 +5,16 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Insert title here</title>
-		<link href="<c:url value="/resources/css/languages.css" />" rel="stylesheet" />
+		<link href="<c:url value="/resources/css/language.css" />" rel="stylesheet" />
 		<c:import url="/jsp/header.jsp"></c:import>
-		<script type="text/javascript" src="<c:url value="/resources/js/languages.js" />"></script> 
+		<script type="text/javascript" src="<c:url value="/resources/js/language.js" />"></script> 
 	</head>
 <body onload="Init()">
 	<section id="container">
 		<c:import url="/jsp/menu.jsp"></c:import>
 		<section id="content">
 		
-			<c:import url="/jsp/packs/listlanguages.jsp"></c:import>
+			<c:import url="/jsp/languages/listLanguages.jsp"></c:import>
 			
 		</section>
 	</section>

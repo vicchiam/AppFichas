@@ -95,7 +95,7 @@ public class WeightUnitController extends HttpServlet {
 		WeightUnit weightUnit=WeightUnitBuilder.weightUnit().build();
 		
 		try {
-			if(id!=null && !id.equals("0")){
+			if(!id.equals(Params.EMPTY_ID+"")){
 				weightUnit = new WeightUnitBusiness().getWeightUnit(Integer.parseInt(id));
 			}
 			request.setAttribute("weightUnit", weightUnit);

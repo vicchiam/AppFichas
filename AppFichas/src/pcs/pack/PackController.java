@@ -127,7 +127,7 @@ public class PackController extends HttpServlet {
 		Pack pack=PackBuilder.pack().build();
 		
 		try {
-			if(id!=null && !id.equals("0")){
+			if(!id.equals(Params.EMPTY_ID+"")){
 				pack=new PackBusiness().getPack(Integer.parseInt(id));
 			}
 			request.setAttribute("pack", pack);
@@ -190,9 +190,7 @@ public class PackController extends HttpServlet {
 		
 		try{
 			String json=new PackBusiness().autocompleteDescription(description, Integer.parseInt(apt), Integer.parseInt(state));			
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().print(json);	
+			ServletUtils.responseJSON(response, json);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 			ServletUtils.showErrorAjax(request, response, e.getMessage());

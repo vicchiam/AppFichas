@@ -3,6 +3,8 @@ package pcs.language;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.json.simple.JSONArray;
+
 import pcs.interfacesDAO.LanguageDAO;
 import pcs.utils.Params;
 
@@ -42,6 +44,17 @@ public class LanguageBusiness {
 	
 	public boolean changePathLanguage(int id, String path) throws SQLException{
 		return this.languageDAO.updatePathLanguage(id, path);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String autocompleteName(String name, int state) throws SQLException{
+		JSONArray root = new JSONArray();
+		
+		Collection<Language> listLanguages=this.languageDAO.listLanguages(name, state);
+		for(Language language : listLanguages){
+			root.add(language.getName());
+		}		
+		return root.toJSONString();		
 	}
 	
 }

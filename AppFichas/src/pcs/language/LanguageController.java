@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import pcs.test.Test;
 import pcs.utils.Params;
 import pcs.utils.ServletUtils;
 import pcs.utils.Window;
@@ -51,24 +52,31 @@ public class LanguageController extends HttpServlet {
 		if(action.equals("list")){
 			this.listLanguages(request, response);
 		}
+		else if(action.equals("autocompleteName")){
+			this.autocompleteNames(request, response);
+		}
+		else if(action.equals("showFormLanguage")){
+			this.showFormLanguage(request, response);
+		}
 		
 	}
 	
 	private void listLanguages(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		Collection<Window> windows=new ArrayList<Window>();
-		windows.add(new Window("LAN",300,120,"Lenguaje"));			
+		windows.add(new Window("LAN",300,120,"Idioma"));			
 		request.setAttribute("windows", windows);		
 		
 		String name=request.getParameter("f_name");
 		request.setAttribute("f_name", name);
 		
-		String state=request.getParameter("state");
+		String state=request.getParameter("f_state");
+		
 		if(state==null) state=Params.ACTIVE+"";
 		request.setAttribute("f_state", state);
 		
 		try {
-			Collection<Language> listLanguages = new LanguageBusiness().listLanguages(name, Integer.parseInt(state));
-			request.setAttribute("listLanguages", listLanguages);
+			Collection<Language> listLanguages = new LanguageBusiness().listLanguages(name, Integer.parseInt(state));			
+			request.setAttribute("listLanguages", listLanguages);			
 			
 			if(request.getParameter("ajax")==null){
 				ServletUtils.setResponseController(this, Params.JSP_PATH+"languages/language").forward(request, response);
@@ -85,11 +93,38 @@ public class LanguageController extends HttpServlet {
 				ServletUtils.showErrorAjax(request, response, e.getMessage());
 			}
 		}
-		
-		
-		
-		
-		
 	}
+	
+	private void autocompleteNames(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String name=request.getParameter("f_name");
+		request.setAttribute("f_name", name);
+		
+		String state=request.getParameter("f_state");
+		if(state==null) state=Params.ACTIVE+"";
+		request.setAttribute("f_state", state);
+		
+		try {
+			String json=new LanguageBusiness().autocompleteName(name, Integer.parseInt(state));
+			ServletUtils.responseJSON(response, json);
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
+		}
+	}
+	
+	private void showFormLanguage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String id=request.getParameter("id");		
+		try {
+			Language language=LanguageBuilder.lenguage().build();
+			if(!id.equals(Params.EMPTY_ID+"")){
+				language=new LanguageBusiness().getLanguage(Integer.parseInt(id));
+			}
+			request.setAttribute("language", language);
+			ServletUtils.setResponseController(this, Params.JSP_PATH+"languages/formLanguage").forward(request, response);			
+		} catch (NumberFormatException | SQLException e) {
+			e.printStackTrace();
+			ServletUtils.showErrorAjax(request, response, e.getMessage());
+		}		
+	}		
 
 }

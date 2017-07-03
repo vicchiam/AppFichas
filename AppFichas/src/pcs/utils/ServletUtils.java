@@ -41,5 +41,11 @@ public class ServletUtils {
 		response.getWriter().print(message);
 	}
 	
+	public static void responseJSON(HttpServletResponse response, String json) throws IOException{
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().print(json);	
+	}
+	
 	
 }

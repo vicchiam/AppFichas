@@ -56,8 +56,17 @@ public class Language extends Generic<Language> implements Serializable{
 
 	@Override
 	public Language autoMake(ResultSet rs) throws SQLException {
-		
-		return null;
+		int id=rs.getInt("id");
+		String name=rs.getString("name");
+		String path=rs.getString("path");
+		int state=rs.getInt("state");
+		return LanguageBuilder
+				.lenguage()
+				.withId(id)
+				.withName(name)
+				.withPath(path)
+				.withState(state)
+				.build();
 	}
 	
 }

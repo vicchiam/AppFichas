@@ -20,7 +20,7 @@
 			<th>Imagen</th>
 			<th></th>
 			<th>Nombre</th>			
-			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormTrademark()" /></th>				
+			<th class="der"><img src="/AppFichas/resources/images/add.png" class="img_button" onclick="ShowFormTrademark('0')" /></th>				
 		</tr>			
 		<c:forEach var="trademark" items="${requestScope.listTrademarks}">
 		<tr class="row">

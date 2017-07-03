@@ -10,7 +10,7 @@ import pcs.interfacesDAO.LanguageDAO;
 
 public class LanguageDAOImpl implements LanguageDAO{
 	
-	private String SELECT_SQL="SELECT id, name, path, state FROM language WHERE state=?";
+	private String SELECT_SQL="SELECT id, name, path, state FROM language";
 	private String SELECT_ID_SQL="SELECT id, name, path, state FROM language WHERE id=?";
 	private String INSERT_SQL="INSERT INTO language (name, path) VALUES(?,NULL)";
 	private String UPDATE_SQL="UPDATE language SET name=?, path=?, state=? WHERE id=?";
@@ -80,7 +80,7 @@ public class LanguageDAOImpl implements LanguageDAO{
 		if(where.size()>0){
 			sql+=" WHERE "+String.join(" AND ", where);
 		}
-		sql+=" ORDER BY name";
+		sql+=" ORDER BY name";		
 		
 		return this.genericDAO.list(sql, params, LanguageBuilder.lenguage().build());
 	}

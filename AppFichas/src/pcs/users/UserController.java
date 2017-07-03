@@ -154,7 +154,7 @@ public class UserController extends HttpServlet {
 		User user=UserBuilder.user().build();
 		
 		try {
-			if(id!=null && !user.equals("0")){
+			if(!id.equals(Params.EMPTY_ID+"")){
 				user = new UserBusiness().getUser(Integer.parseInt(id));
 			}
 			request.setAttribute("user",user);
@@ -263,9 +263,7 @@ public class UserController extends HttpServlet {
 		
 		try{
 			String json=new UserBusiness().autocompleteUser(userName, mail, Integer.parseInt(type), Integer.parseInt(state));
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().print(json);		
+			ServletUtils.responseJSON(response, json);	
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 			ServletUtils.showErrorAjax(request, response, e.getMessage());
@@ -284,9 +282,7 @@ public class UserController extends HttpServlet {
 		
 		try{
 			String json=new UserBusiness().autocompleteMail(userName, mail, Integer.parseInt(type), Integer.parseInt(state));			
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().print(json);
+			ServletUtils.responseJSON(response, json);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 			ServletUtils.showErrorAjax(request, response, e.getMessage());

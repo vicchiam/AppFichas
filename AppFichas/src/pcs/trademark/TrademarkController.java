@@ -121,7 +121,7 @@ public class TrademarkController extends HttpServlet {
 		Trademark trademark=TrademarkBuilder.trademark().build();
 		
 		try {
-			if(id!=null && !id.equals("0")){
+			if(!id.equals(Params.EMPTY_ID+"")){
 				trademark = new TrademarkBusiness().getTrademark(Integer.parseInt(id));
 			}
 			request.setAttribute("trademark",trademark);		
@@ -194,9 +194,7 @@ public class TrademarkController extends HttpServlet {
 		try {
 			String json;
 			json = new TrademarkBusiness().autocompleteName(name, Integer.parseInt(state));
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().print(json);	
+			ServletUtils.responseJSON(response, json);
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 			ServletUtils.showErrorAjax(request, response, e.getMessage());
